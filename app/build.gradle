@@ -4,12 +4,18 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'kotlin-kapt'
+
+apply plugin: 'io.objectbox'
+
+apply plugin: 'androidx.navigation.safeargs'
+
 android {
-    compileSdkVersion 28
+    compileSdkVersion rootProject.ext.compileSdkVersion
     defaultConfig {
         applicationId "com.kubiakdev.safely"
-        minSdkVersion 19
-        targetSdkVersion 28
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -22,17 +28,82 @@ android {
     }
 }
 
+ext {
+    adapterDelegates_version = '3.0.1'
+    appCompat_version = '1.0.0'
+    circleIndicator_version = '1.2.2@aar'
+    constraintLayout_version = '1.1.3'
+    core_version = '1.0.0'
+    dagger_version = '2.17'
+    easyPrefs_version = '1.9.0'
+    espresso_version = '3.1.0-alpha4'
+    junit_version = '4.12'
+    leakCanary_version = '1.5.4'
+    material_version = '1.0.0-rc02'
+    navigation_version = '1.0.0-alpha05'
+    patternLock_version = '1.0.0'
+    pinLock_version = '2.1.0'
+    runner_version = '1.1.0-alpha4'
+    rxAndroid_version = '2.0.2'
+    rxKotlin_version = '2.2.0'
+    rxLifecycle_version = '2.2.1'
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.0.0-beta01'
-    implementation 'android.arch.navigation:navigation-fragment:1.0.0-alpha05'
-    implementation 'android.arch.navigation:navigation-ui:1.0.0-alpha05'
-    implementation 'android.arch.navigation:navigation-fragment-ktx:1.0.0-alpha05'
-    implementation 'android.arch.navigation:navigation-ui-ktx:1.0.0-alpha05'
-    implementation 'androidx.core:core-ktx:1.0.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.2'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.0-alpha4'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha4'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "androidx.core:core-ktx:$core_version"
+    testImplementation "junit:junit:$junit_version"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
+    androidTestImplementation "androidx.test:runner:$runner_version"
+
+    //AdapterDelegate
+    implementation "com.hannesdorfmann:adapterdelegates3:$adapterDelegates_version"
+
+    //AppCompat
+    implementation "androidx.appcompat:appcompat:$appCompat_version"
+
+    //CircleIndicator
+    implementation "me.relex:circleindicator:$circleIndicator_version"
+
+    //ConstraintLayout
+    implementation "androidx.constraintlayout:constraintlayout:$constraintLayout_version"
+
+    implementation "com.google.dagger:dagger:$dagger_version"
+    annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
+    implementation "com.google.dagger:dagger-android:$dagger_version"
+    implementation "com.google.dagger:dagger-android-support:$dagger_version"
+    annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
+
+    //EasyPrefs
+    implementation "com.pixplicity.easyprefs:library:$easyPrefs_version"
+
+    //LeakCanary
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanary_version"
+    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanary_version"
+
+    //Material
+    implementation "com.google.android.material:material:$material_version"
+
+    //Navigation
+    implementation "android.arch.navigation:navigation-fragment:$navigation_version"
+    implementation "android.arch.navigation:navigation-ui:$navigation_version"
+    implementation "android.arch.navigation:navigation-fragment-ktx:$navigation_version"
+    implementation "android.arch.navigation:navigation-ui-ktx:$navigation_version"
+
+    //PatternLock
+    implementation "com.andrognito.patternlockview:patternlockview-reactive:$patternLock_version"
+
+    //PinLock
+    implementation "com.andrognito.pinlockview:pinlockview:$pinLock_version"
+
+    //RxAndroid
+    implementation "io.reactivex.rxjava2:rxandroid:$rxAndroid_version"
+
+    //RxKotlin2
+    implementation "io.reactivex.rxjava2:rxkotlin:$rxKotlin_version"
+
+    //RxLifecycle
+    implementation "com.trello.rxlifecycle2:rxlifecycle:$rxLifecycle_version"
+    implementation "com.trello.rxlifecycle2:rxlifecycle-components:$rxLifecycle_version"
 }
