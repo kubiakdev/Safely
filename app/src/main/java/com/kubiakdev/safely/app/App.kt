@@ -2,6 +2,7 @@ package com.kubiakdev.safely.app
 
 import android.content.ContextWrapper
 import android.os.StrictMode
+import com.kubiakdev.safely.data.db.entity.MyObjectBox
 import com.kubiakdev.safely.di.component.DaggerAppComponent
 import com.pixplicity.easyprefs.library.Prefs
 import com.squareup.leakcanary.LeakCanary
@@ -33,7 +34,7 @@ class App : DaggerApplication() {
                     .build())
 
     private fun initDatabase() {
-//        MyObjectBox.builder().androidContext(this).buildDefault()
+        MyObjectBox.builder().androidContext(this).buildDefault()
     }
 
     private fun initPrefs() {
