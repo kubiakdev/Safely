@@ -1,7 +1,8 @@
-package com.kubiakdev.safely
+package com.kubiakdev.safely.ui.main.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.kubiakdev.safely.R
 
 class MainActivity : AppCompatActivity() {
 
