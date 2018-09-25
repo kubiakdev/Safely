@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="margin_title_left">56dp</dimen>
+    <dimen name="margin_title_top">56dp</dimen>
+
+    <dimen name="fontSize_title">56sp</dimen>
+</resources>
