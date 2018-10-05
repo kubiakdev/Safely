@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <dimen name="margin_card">2dp</dimen>
+    <dimen name="margin_card_vertical">28dp</dimen>
     <dimen name="margin_title_left">56dp</dimen>
-    <dimen name="margin_title_top">56dp</dimen>
+    <dimen name="margin_title_top">28dp</dimen>
+    <dimen name="margin_rv_top">28dp</dimen>
+    <dimen name="margin_tvCard_vertical">21dp</dimen>
+    <dimen name="margin_password_item_horizontal">7dp</dimen>
 
-    <dimen name="fontSize_title">56sp</dimen>
+    <dimen name="margin_detail_item_horizontal">7dp</dimen>
+
+    <dimen name="fontSize_title">35sp</dimen>
+    <dimen name="fontSize_subtitle">28sp</dimen>
+    <dimen name="fontSize_key">14sp</dimen>
+    <dimen name="fontSize_value">21sp</dimen>
+    <dimen name="fontSize_tvCard">21sp</dimen>
 </resources>

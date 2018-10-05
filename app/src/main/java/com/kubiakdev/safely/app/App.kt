@@ -8,6 +8,7 @@ import com.pixplicity.easyprefs.library.Prefs
 import com.squareup.leakcanary.LeakCanary
 import dagger.android.AndroidInjector
 import dagger.android.support.DaggerApplication
+import io.objectbox.BoxStore
 
 class App : DaggerApplication() {
 
@@ -35,6 +36,8 @@ class App : DaggerApplication() {
 
     private fun initDatabase() {
         MyObjectBox.builder().androidContext(this).buildDefault()
+//        BoxStore.getDefault().close()
+//        BoxStore.getDefault().deleteAllFiles()
     }
 
     private fun initPrefs() {

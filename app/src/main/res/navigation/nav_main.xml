@@ -6,5 +6,36 @@
     <fragment
         android:id="@+id/mainFragment"
         android:name="com.kubiakdev.safely.ui.main.fragment.main.MainFragment"
-        android:label="MainFragment" />
+        android:label="MainFragment" >
+        <action
+            android:id="@+id/action_mainFragment_to_passwordFragment"
+            app:destination="@id/passwordFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/passwordFragment"
+        android:name="com.kubiakdev.safely.ui.main.fragment.password.PasswordFragment"
+        android:label="PasswordFragment" >
+        <action
+            android:id="@+id/action_passwordFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
+        <action
+            android:id="@+id/action_passwordFragment_to_addFragment"
+            app:destination="@id/detailFragment" />
+        <argument
+            android:name="iconResId"
+            app:argType="integer"
+            android:defaultValue="-1" />
+        <argument
+            android:name="keyResId"
+            app:argType="integer"
+            android:defaultValue="-1" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailFragment"
+        android:name="com.kubiakdev.safely.ui.main.fragment.detail.DetailFragment"
+        android:label="DetailFragment" >
+        <action
+            android:id="@+id/action_detailFragment_to_passwordFragment"
+            app:destination="@id/passwordFragment" />
+    </fragment>
 </navigation>
