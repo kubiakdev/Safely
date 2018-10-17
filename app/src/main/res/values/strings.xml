@@ -19,10 +19,19 @@
     <string name="password_value_hint">Value</string>
     <string name="password_title_new">New password</string>
     <string name="password_record_new">Add record</string>
+
+    <string name="password_delete_on">Delete mode on</string>
+    <string name="password_delete_off">Delete mode off</string>
     
     <string name="detail_icon_desc">Icon</string>
     <string name="detail_show_desc">Show</string>
     <string name="detail_copy_desc">Copy</string>
     <string name="detail_title">Templates</string>
+
+    <string name="template_title">New template</string>
+    <string name="template_icon_select">Select icon &amp; key</string>
+    <string name="template_hint_key">Key name</string>
+
+    <string name="template_notnull_key_required">The key cannot be empty</string>
 
 </resources>

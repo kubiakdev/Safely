@@ -7,10 +7,13 @@ import io.objectbox.Box
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.experimental.Deferred
 
 interface DataManager {
 
     fun getAllDetailEntities(scheduler: Scheduler = Schedulers.io()): Observable<List<DetailEntity>>
+
+    fun getAllDetailEntities(): Deferred<List<DetailEntity>>
 
     val cipherBox: Observable<Box<CipherEntity>>
 

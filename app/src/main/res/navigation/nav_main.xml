@@ -16,26 +16,22 @@
         android:name="com.kubiakdev.safely.ui.main.fragment.password.PasswordFragment"
         android:label="PasswordFragment" >
         <action
-            android:id="@+id/action_passwordFragment_to_mainFragment"
-            app:destination="@id/mainFragment" />
-        <action
-            android:id="@+id/action_passwordFragment_to_addFragment"
+            android:id="@+id/action_passwordFragment_to_detailFragment"
             app:destination="@id/detailFragment" />
-        <argument
-            android:name="iconResId"
-            app:argType="integer"
-            android:defaultValue="-1" />
-        <argument
-            android:name="keyResId"
-            app:argType="integer"
-            android:defaultValue="-1" />
     </fragment>
     <fragment
         android:id="@+id/detailFragment"
         android:name="com.kubiakdev.safely.ui.main.fragment.detail.DetailFragment"
         android:label="DetailFragment" >
+        <!--<action-->
+            <!--android:id="@+id/action_detailFragment_to_passwordFragment"-->
+            <!--app:destination="@id/passwordFragment" />-->
         <action
-            android:id="@+id/action_detailFragment_to_passwordFragment"
-            app:destination="@id/passwordFragment" />
+            android:id="@+id/action_detailFragment_to_templateFragment"
+            app:destination="@id/templateFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/templateFragment"
+        android:name="com.kubiakdev.safely.ui.main.fragment.template.TemplateFragment"
+        android:label="TemplateFragment" />
 </navigation>

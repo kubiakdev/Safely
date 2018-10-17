@@ -8,14 +8,22 @@ object MainValues {
 
     val DETAIL_DEFAULT_TEMPLATE_LIST: MutableList<DetailModel> =
             mutableListOf(
-                    DetailModel(R.drawable.ic_title, R.string.all_new_title),
-                    DetailModel(R.drawable.ic_person, R.string.all_new_username),
-                    DetailModel(R.drawable.ic_person, R.string.all_new_login),
-                    DetailModel(R.drawable.ic_email, R.string.all_new_email),
-                    DetailModel(R.drawable.ic_lock, R.string.all_new_password),
-                    DetailModel(R.drawable.ic_credit_card, R.string.all_new_card_number),
-                    DetailModel(R.drawable.ic_account_balance, R.string.all_new_account_number),
-                    DetailModel(R.drawable.ic_description, R.string.all_new_description),
-                    DetailModel(R.drawable.ic_edit, R.string.all_new_custom)
+                    DetailModel(R.drawable.ic_title, "Title"),
+                    DetailModel(R.drawable.ic_person, "Username"),
+                    DetailModel(R.drawable.ic_person, "Login"),
+                    DetailModel(R.drawable.ic_email, "Email"),
+                    DetailModel(R.drawable.ic_lock, "Password"),
+                    DetailModel(R.drawable.ic_credit_card, "Card number"),
+                    DetailModel(R.drawable.ic_account_balance, "Account number"),
+                    DetailModel(R.drawable.ic_description, "Description"),
+                    DetailModel(R.drawable.ic_edit, "Custom")
             )
+
+    const val EXTRA_DETAIL_ICON_RES_ID = "EXTRA_DETAIL_ICON_RES_ID"
+    const val EXTRA_DETAIL_KEY = "EXTRA_DETAIL_KEY"
+    const val EXTRA_TEMPLATE_ICON_RES_ID = "EXTRA_TEMPLATE_ICON_RES_ID"
+    const val EXTRA_TEMPLATE_KEY = "EXTRA_TEMPLATE_KEY"
+
+    const val ACTION_TEMPLATE_SAVE = "ACTION_TEMPLATE_SAVE"
+    const val ACTION_PASSWORD_DELETE = "ACTION_PASSWORD_DELETE"
 }

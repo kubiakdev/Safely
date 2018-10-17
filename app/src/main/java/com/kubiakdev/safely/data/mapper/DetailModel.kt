@@ -6,7 +6,7 @@ import com.kubiakdev.safely.data.model.DetailModel
 fun mapEntityToModel(entity: DetailEntity): DetailModel = DetailModel(
         entity.id,
         entity.iconResId,
-        entity.keyResId,
+        entity.key,
         entity.value,
         entity.isShown
 )
@@ -14,7 +14,7 @@ fun mapEntityToModel(entity: DetailEntity): DetailModel = DetailModel(
 fun mapModelToEntity(model: DetailModel): DetailEntity = DetailEntity(
         model.id,
         model.iconResId,
-        model.keyResId,
+        model.key,
         model.value,
         model.isShown
 )

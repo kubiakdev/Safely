@@ -4,6 +4,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.kubiakdev.safely.R
 import com.kubiakdev.safely.mvp.BaseFragment
+import com.kubiakdev.safely.ui.main.MainValues
 import com.kubiakdev.safely.ui.main.fragment.main.mvp.main.MainPresenter
 import com.kubiakdev.safely.ui.main.fragment.main.mvp.main.MainView
 import kotlinx.android.synthetic.main.activity_main.*
@@ -21,4 +22,6 @@ class MainFragment : BaseFragment<MainPresenter>(), MainView {
             findNavController().navigate(R.id.action_mainFragment_to_passwordFragment)
         }
     }
+
+    override fun doOnMenuActionClick(action: String, value: Boolean) {}
 }

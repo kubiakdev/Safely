@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cl_detail_item"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -8,7 +9,7 @@
     android:layout_marginBottom="@dimen/margin_card">
 
     <ImageView
-        android:id="@+id/iv_icon"
+        android:id="@+id/iv_detail_item_icon"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginStart="@dimen/margin_password_item_horizontal"
@@ -17,14 +18,14 @@
         android:layout_marginRight="@dimen/margin_password_item_horizontal"
         android:contentDescription="@string/detail_icon_desc"
         android:src="@drawable/ic_more"
-        app:layout_constraintBottom_toTopOf="@id/v_separator"
+        app:layout_constraintBottom_toTopOf="@id/v_detail_item_separator"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/et_key"
+        android:id="@+id/et_detail_item_key"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_password_item_horizontal"
@@ -39,15 +40,15 @@
         android:scrollHorizontally="false"
         android:textColor="@color/textColorSecondary"
         android:textSize="@dimen/fontSize_key"
-        app:layout_constraintBottom_toTopOf="@id/v_separator"
-        app:layout_constraintEnd_toStartOf="@+id/ib_show"
+        app:layout_constraintBottom_toTopOf="@id/v_detail_item_separator"
+        app:layout_constraintEnd_toStartOf="@+id/ib_detail_item_show"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/iv_icon"
+        app:layout_constraintStart_toEndOf="@+id/iv_detail_item_icon"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 
     <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/et_value"
+        android:id="@+id/et_detail_item_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_password_item_horizontal"
@@ -61,14 +62,14 @@
         android:scrollHorizontally="false"
         android:textColor="@color/textColorPrimary"
         android:textSize="@dimen/fontSize_value"
-        app:layout_constraintBottom_toTopOf="@id/v_separator"
-        app:layout_constraintEnd_toStartOf="@+id/ib_show"
+        app:layout_constraintBottom_toTopOf="@id/v_detail_item_separator"
+        app:layout_constraintEnd_toStartOf="@+id/ib_detail_item_show"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/iv_icon"
-        app:layout_constraintTop_toBottomOf="@id/et_key" />
+        app:layout_constraintStart_toEndOf="@+id/iv_detail_item_icon"
+        app:layout_constraintTop_toBottomOf="@id/et_detail_item_key" />
 
     <ImageButton
-        android:id="@+id/ib_show"
+        android:id="@+id/ib_detail_item_show"
         android:layout_width="24dp"
         android:layout_height="0dp"
         android:layout_marginStart="@dimen/margin_password_item_horizontal"
@@ -78,14 +79,14 @@
         android:background="@null"
         android:contentDescription="@string/detail_show_desc"
         android:src="@drawable/ic_visibility"
-        app:layout_constraintBottom_toTopOf="@id/v_separator"
-        app:layout_constraintEnd_toStartOf="@+id/ib_copy"
+        app:layout_constraintBottom_toTopOf="@id/v_detail_item_separator"
+        app:layout_constraintEnd_toStartOf="@+id/ib_detail_item_copy"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
-        android:id="@+id/ib_copy"
+        android:id="@+id/ib_detail_item_copy"
         android:layout_width="24dp"
         android:layout_height="0dp"
         android:layout_marginStart="@dimen/margin_password_item_horizontal"
@@ -95,14 +96,14 @@
         android:background="@null"
         android:contentDescription="@string/detail_copy_desc"
         android:src="@drawable/ic_copy"
-        app:layout_constraintBottom_toTopOf="@id/v_separator"
+        app:layout_constraintBottom_toTopOf="@id/v_detail_item_separator"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <View
-        android:id="@+id/v_separator"
+        android:id="@+id/v_detail_item_separator"
         android:layout_width="0dp"
         android:layout_height="0.5dp"
         android:alpha="0.2"

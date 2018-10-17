@@ -4,18 +4,23 @@ import android.content.ContextWrapper
 import android.os.StrictMode
 import com.kubiakdev.safely.data.db.entity.MyObjectBox
 import com.kubiakdev.safely.di.component.DaggerAppComponent
+import com.kubiakdev.safely.util.EventBus
 import com.pixplicity.easyprefs.library.Prefs
 import com.squareup.leakcanary.LeakCanary
 import dagger.android.AndroidInjector
 import dagger.android.support.DaggerApplication
-import io.objectbox.BoxStore
+import javax.inject.Inject
 
 class App : DaggerApplication() {
+
+    @Inject
+    lateinit var eventBus: EventBus
 
     override fun onCreate() {
         super.onCreate()
         initDatabase()
         initPrefs()
+        eventBus.send("action performed")
     }
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> =

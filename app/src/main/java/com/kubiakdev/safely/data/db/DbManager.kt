@@ -9,6 +9,8 @@ import io.objectbox.BoxStore
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
+import kotlinx.coroutines.experimental.Deferred
+import kotlinx.coroutines.experimental.async
 
 class DbManager : DataManager {
 
@@ -22,9 +24,11 @@ class DbManager : DataManager {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(scheduler)
 
-    override
-    val cipherBox: Observable<Box<CipherEntity>>
-        get() = Observable.fromCallable { BoxStore.getDefault().boxFor(CipherEntity::class.java) }
+    override fun getAllDetailEntities() : Deferred<List<DetailEntity>> =
+            async { BoxStore.getDefault().boxFor(DetailEntity::class.java).all }
+
+    override val cipherBox: Observable<Box<CipherEntity>> =
+            Observable.fromCallable { BoxStore.getDefault().boxFor(CipherEntity::class.java) }
 
 //    override val noteBox: Observable<Box<NoteEntity>>
 //        get() = Observable.fromCallable { BoxStore.getDefault().boxFor(NoteEntity::class.java) }

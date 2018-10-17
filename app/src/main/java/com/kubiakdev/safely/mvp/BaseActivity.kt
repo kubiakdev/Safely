@@ -2,6 +2,7 @@ package com.kubiakdev.safely.mvp
 
 import android.os.Bundle
 import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import dagger.android.support.DaggerAppCompatActivity
@@ -11,6 +12,8 @@ abstract class BaseActivity<P : BasePresenter<*>> : DaggerAppCompatActivity(), B
 
     @Inject
     lateinit var presenter: P
+
+    var fragmentListener: FragmentListener? = null
 
     protected abstract val layoutId: Int
 
@@ -35,7 +38,10 @@ abstract class BaseActivity<P : BasePresenter<*>> : DaggerAppCompatActivity(), B
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
-    protected open fun launchFragment() {}
+    abstract fun showSnackBar(@StringRes stringRes: Int)
 
     open fun setActionBar() {}
+
+    protected open fun launchFragment() {}
+
 }

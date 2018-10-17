@@ -1,24 +1,22 @@
 package com.kubiakdev.safely.data.model
 
-data class DetailModel(var iconResId: Int,
-                        var keyResId: Int) {
-
+data class DetailModel(var iconResId: Int, var key: String) : Model {
     var id: Long? = 0
 
-    var value: String? = ""
-    var isShown: Boolean? = true
+    var value: String = ""
+    var isShown: Boolean = false
 
     constructor(
             iconResId: Int,
-            keyResId: Int,
-            value: String?,
-            isShown: Boolean?
+            key: String,
+            value: String,
+            isShown: Boolean
     ) : this(
             iconResId,
-            keyResId
+            key
     ) {
         this.iconResId = iconResId
-        this.keyResId = keyResId
+        this.key = key
         this.value = value
         this.isShown = isShown
     }
@@ -26,18 +24,18 @@ data class DetailModel(var iconResId: Int,
     constructor(
             id: Long?,
             iconResId: Int,
-            keyResId: Int,
-            value: String?,
-            isShown: Boolean?
+            key: String,
+            value: String,
+            isShown: Boolean
     ) : this(
             iconResId,
-            keyResId,
+            key,
             value,
             isShown
     ) {
         this.id = id
         this.iconResId = iconResId
-        this.keyResId = keyResId
+        this.key = key
         this.value = value
         this.isShown = isShown
     }

@@ -5,25 +5,25 @@ import io.objectbox.annotation.Id
 
 @Entity
 data class DetailEntity(var iconResId: Int = 0,
-                        var keyResId: Int = 0) {
+                        var key: String = "") {
 
     @Id
     var id: Long? = 0
 
-    var value: String? = ""
-    var isShown: Boolean? = true
+    var value: String= ""
+    var isShown: Boolean = false
 
     constructor(
             iconResId: Int,
-            keyResId: Int,
-            value: String?,
-            isShown: Boolean?
+            key: String,
+            value: String,
+            isShown: Boolean
     ) : this(
             iconResId,
-            keyResId
+            key
     ) {
         this.iconResId = iconResId
-        this.keyResId = keyResId
+        this.key = key
         this.value = value
         this.isShown = isShown
     }
@@ -31,18 +31,18 @@ data class DetailEntity(var iconResId: Int = 0,
     constructor(
             id: Long?,
             iconResId: Int,
-            keyResId: Int,
-            value: String?,
-            isShown: Boolean?
+            key : String,
+            value: String,
+            isShown: Boolean
     ) : this(
             iconResId,
-            keyResId,
+            key,
             value,
             isShown
     ) {
         this.id = id
         this.iconResId = iconResId
-        this.keyResId = keyResId
+        this.key = key
         this.value = value
         this.isShown = isShown
     }

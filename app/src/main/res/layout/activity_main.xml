@@ -7,15 +7,25 @@
     android:background="@color/colorPrimary"
     tools:context=".ui.main.activity.MainActivity">
 
-    <fragment
-        android:id="@+id/nav_host_main"
-        android:name="androidx.navigation.fragment.NavHostFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="84dp"
-        app:defaultNavHost="true"
-        app:navGraph="@navigation/nav_main"/>
-    
+        <fragment
+            android:id="@+id/nav_host_main"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimary"
+            app:defaultNavHost="true"
+            android:layout_marginBottom="56dp"
+            app:navGraph="@navigation/nav_main" />
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/cl_main_snack"
+            android:layout_width="match_parent"
+            android:layout_marginBottom="84dp"
+            android:layout_height="match_parent">
+
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
     <View
         android:id="@+id/v_shadow_main"
         android:layout_width="match_parent"
@@ -31,7 +41,6 @@
         android:layout_gravity="bottom"
         android:background="@color/colorPrimary"
         app:backgroundTint="@color/colorPrimary"
-        app:fabAlignmentMode="center"
         app:navigationIcon="@drawable/ic_menu"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
