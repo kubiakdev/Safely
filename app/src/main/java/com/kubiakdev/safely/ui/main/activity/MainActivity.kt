@@ -2,13 +2,15 @@ package com.kubiakdev.safely.ui.main.activity
 
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.core.view.get
 import com.google.android.material.snackbar.Snackbar
 import com.kubiakdev.safely.R
-import com.kubiakdev.safely.mvp.BaseActivity
+import com.kubiakdev.safely.base.BaseActivity
 import com.kubiakdev.safely.ui.main.MainValues
+import com.kubiakdev.safely.util.KeyboardUtil
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity<MainPresenter>(), MainView {
@@ -24,6 +26,10 @@ class MainActivity : BaseActivity<MainPresenter>(), MainView {
         setSupportActionBar(bar_main)
     }
 
+    override fun onAttach() {
+        presenter.view = this
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         this.menu = menu
@@ -31,6 +37,7 @@ class MainActivity : BaseActivity<MainPresenter>(), MainView {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        KeyboardUtil.hideKeyboard(currentFocus ?: View(this))
         when (item?.itemId) {
             R.id.action_password_add -> {
                 navController.navigate(R.id.action_passwordFragment_to_detailFragment)
@@ -47,10 +54,21 @@ class MainActivity : BaseActivity<MainPresenter>(), MainView {
                 isInDeletePasswordMode = !isInDeletePasswordMode
                 switchDeleteMode()
                 fragmentListener
-                        ?.doOnMenuActionClick(MainValues.ACTION_PASSWORD_DELETE, isInDeletePasswordMode)?:System.out.print("ddd")
+                        ?.doOnMenuActionClick(
+                                MainValues.ACTION_PASSWORD_DELETE,
+                                isInDeletePasswordMode
+                        )
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun hideProgressBar() {
+        pb_main.visibility = View.GONE
+    }
+
+    override fun showProgressBar() {
+        pb_main.visibility = View.VISIBLE
     }
 
     override fun showSnackBar(@StringRes stringRes: Int) {

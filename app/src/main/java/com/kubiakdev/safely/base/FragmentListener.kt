@@ -1,4 +1,4 @@
-package com.kubiakdev.safely.mvp
+package com.kubiakdev.safely.base
 
 interface FragmentListener {
 

@@ -9,19 +9,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.kubiakdev.safely.R
 import com.kubiakdev.safely.data.model.DetailModel
-import com.kubiakdev.safely.mvp.BaseActivity
-import com.kubiakdev.safely.mvp.BaseFragment
-import com.kubiakdev.safely.mvp.adapter.OnStartDragListener
+import com.kubiakdev.safely.base.BaseActivity
+import com.kubiakdev.safely.base.BaseFragment
+import com.kubiakdev.safely.base.adapter.SimpleItemTouchHelperCallback
 import com.kubiakdev.safely.ui.main.MainValues
+import com.kubiakdev.safely.ui.main.activity.MainActivity
 import com.kubiakdev.safely.ui.main.fragment.password.adapter.AdapterListener
 import com.kubiakdev.safely.ui.main.fragment.password.adapter.PasswordAdapter
+import com.kubiakdev.safely.util.KeyboardUtil
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_password.*
-import com.kubiakdev.safely.mvp.adapter.SimpleItemTouchHelperCallback
-import com.kubiakdev.safely.ui.main.activity.MainActivity
-import com.kubiakdev.safely.util.KeyboardUtil
 
-class PasswordFragment : BaseFragment<PasswordPresenter>(), AdapterListener{
+class PasswordFragment : BaseFragment<PasswordPresenter>(), PasswordView, AdapterListener {
 
     override val layoutId: Int = R.layout.fragment_password
 
@@ -62,6 +61,10 @@ class PasswordFragment : BaseFragment<PasswordPresenter>(), AdapterListener{
         (activity as MainActivity).switchDeleteMode()
     }
 
+    override fun onAttach() {
+        presenter.view = this
+    }
+
     override fun initComponents() {
         initActivityComponents()
         rv_password.run {
@@ -69,6 +72,7 @@ class PasswordFragment : BaseFragment<PasswordPresenter>(), AdapterListener{
             passwordAdapter.adapterListener = this@PasswordFragment
             adapter = passwordAdapter
         }
+        KeyboardUtil.showKeyboard(view?:View(context))
     }
 
     override fun onResume() {
@@ -118,7 +122,7 @@ class PasswordFragment : BaseFragment<PasswordPresenter>(), AdapterListener{
     }
 
     override fun onDestroy() {
-        KeyboardUtil.hideKeyboard(view ?: View(context))
+//        KeyboardUtil.hideKeyboard(view ?: View(context))
         super.onDestroy()
     }
 

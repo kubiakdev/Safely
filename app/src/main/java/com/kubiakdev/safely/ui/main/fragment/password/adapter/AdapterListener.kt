@@ -1,7 +1,7 @@
 package com.kubiakdev.safely.ui.main.fragment.password.adapter
 
 import androidx.annotation.StringRes
-import com.kubiakdev.safely.mvp.adapter.BaseAdapterListener
+import com.kubiakdev.safely.base.adapter.BaseAdapterListener
 
 interface AdapterListener : BaseAdapterListener {
 

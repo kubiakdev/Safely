@@ -1,4 +1,4 @@
-package com.kubiakdev.safely.mvp.adapter
+package com.kubiakdev.safely.base.adapter
 
 import androidx.recyclerview.widget.RecyclerView
 

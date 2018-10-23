@@ -14,18 +14,18 @@ import kotlinx.coroutines.experimental.async
 
 class DbManager : DataManager {
 
-    override fun getAllDetailEntities(
-            scheduler: Scheduler
-    ): Observable<List<DetailEntity>> =
-            Observable.fromCallable {
-                BoxStore.getDefault().boxFor(DetailEntity::class.java).all
-            }
-                    .doOnError { it.printStackTrace() }
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(scheduler)
+//    override fun getAllDetailEntities(
+//            scheduler: Scheduler
+//    ): Observable<List<DetailEntity>> =
+//            Observable.fromCallable {
+//                BoxStore.getDefault().boxFor(DetailEntity::class.java).all
+//            }
+//                    .doOnError { it.printStackTrace() }
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .subscribeOn(scheduler)
 
-    override fun getAllDetailEntities() : Deferred<List<DetailEntity>> =
-            async { BoxStore.getDefault().boxFor(DetailEntity::class.java).all }
+    override fun getAllDetailEntities() : MutableList<DetailEntity> =
+            BoxStore.getDefault().boxFor(DetailEntity::class.java).all
 
     override val cipherBox: Observable<Box<CipherEntity>> =
             Observable.fromCallable { BoxStore.getDefault().boxFor(CipherEntity::class.java) }

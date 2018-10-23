@@ -11,9 +11,9 @@ import kotlinx.coroutines.experimental.Deferred
 
 interface DataManager {
 
-    fun getAllDetailEntities(scheduler: Scheduler = Schedulers.io()): Observable<List<DetailEntity>>
+//    fun getAllDetailEntities(scheduler: Scheduler = Schedulers.io()): Observable<List<DetailEntity>>
 
-    fun getAllDetailEntities(): Deferred<List<DetailEntity>>
+    fun getAllDetailEntities(): MutableList<DetailEntity>
 
     val cipherBox: Observable<Box<CipherEntity>>
 

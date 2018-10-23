@@ -33,5 +33,13 @@
     <fragment
         android:id="@+id/templateFragment"
         android:name="com.kubiakdev.safely.ui.main.fragment.template.TemplateFragment"
-        android:label="TemplateFragment" />
+        android:label="TemplateFragment" >
+        <action
+            android:id="@+id/action_templateFragment_to_iconFragment"
+            app:destination="@id/iconFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/iconFragment"
+        android:name="com.kubiakdev.safely.ui.main.fragment.icon.IconFragment"
+        android:label="IconFragment" />
 </navigation>

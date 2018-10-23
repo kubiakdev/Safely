@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <dimen name="height_bar">56dp</dimen>
+
     <dimen name="margin_card">2dp</dimen>
     <dimen name="margin_big">28dp</dimen>
     <dimen name="margin_tiny">7dp</dimen>
     <dimen name="margin_small">14dp</dimen>
     <dimen name="margin_medium">21dp</dimen>
+    <dimen name="margin_nav_arrow_horizontal">16dp</dimen>
     <dimen name="margin_card_vertical">28dp</dimen>
     <dimen name="margin_title_left">56dp</dimen>
     <dimen name="margin_title_top">28dp</dimen>

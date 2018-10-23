@@ -5,40 +5,37 @@ import android.view.View
 import android.view.ViewGroup
 import com.kubiakdev.safely.R
 import com.kubiakdev.safely.data.model.IconModel
-import com.kubiakdev.safely.mvp.adapter.BaseAdapter
-import com.kubiakdev.safely.mvp.adapter.BaseAdapterListener
-import com.kubiakdev.safely.mvp.adapter.OnStartDragListener
+import com.kubiakdev.safely.base.adapter.BaseAdapter
+import com.kubiakdev.safely.base.adapter.BaseAdapterListener
+import com.kubiakdev.safely.base.adapter.OnStartDragListener
+import kotlinx.android.synthetic.main.item_icon.view.*
 
 class IconAdapter(
         override var list: MutableList<IconModel>,
         override var dragListener: OnStartDragListener
-) : BaseAdapter<IconModel>(list, dragListener) {
+) : BaseAdapter<IconModel, IconAdapter.IconHolder, AdapterListener>(list, dragListener) {
 
-    override val layoutResId: Int = R.layout.
+    override lateinit var adapterListener: AdapterListener
 
-    override lateinit var adapterListener: BaseAdapterListener
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IconHolder =
+            IconHolder(
+                    view = LayoutInflater.from(parent.context)
+                            .inflate(R.layout.item_icon, parent, false),
+                    listener = adapterListener)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IconHolder {
-        val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_detail_new, parent, false)
-        return IconHolder(view)
-    }
-
-    override fun onBindViewHolder(holder: BaseHolder<IconModel>, position: Int) {
-        holder.bindHolder(list[position], dragListener)
-    }
-
-    override fun onItemDismiss(position: Int) {}
-
-    override fun getItemCount(): Int = list.size
-
-    inner class IconHolder(override val view: View) : BaseHolder<IconModel>(view, adapterListener) {
+    inner class IconHolder(
+            override val view: View,
+            override val listener: BaseAdapterListener
+    ) : BaseAdapter.BaseHolder<IconModel>(view, adapterListener) {
 
         override fun bindHolder(model: IconModel, dragListener: OnStartDragListener) {
+            view.ib_icon.run {
+                setImageResource(model.iconResId)
+                tag = model.iconResId
+                setOnClickListener {
+                    adapterListener.onIconClicked(model.iconResId)
+                }
+            }
         }
-
-        override fun onItemClear() {}
-
-        override fun onItemSelected() {}
     }
 }

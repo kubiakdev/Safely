@@ -13,6 +13,8 @@
 
     <string name="app_name">Safely</string>
 
+    <string name="icon_title">Icons</string>
+
     <string name="main_title">Passwords</string>
 
     <string name="password_title_hint">Title</string>

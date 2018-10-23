@@ -1,5 +1,5 @@
 package com.kubiakdev.safely.ui.main.fragment.main.mvp.main
 
-import com.kubiakdev.safely.mvp.BaseView
+import com.kubiakdev.safely.base.BaseView
 
 interface MainView : BaseView

@@ -1,4 +1,4 @@
-package com.kubiakdev.safely.mvp
+package com.kubiakdev.safely.base
 
 import android.os.Bundle
 import android.widget.Toast
@@ -24,6 +24,7 @@ abstract class BaseActivity<P : BasePresenter<*>> : DaggerAppCompatActivity(), B
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(layoutId)
+        onAttach()
         navController = Navigation.findNavController(this, navControllerId)
         launchFragment()
         setActionBar()
@@ -37,6 +38,12 @@ abstract class BaseActivity<P : BasePresenter<*>> : DaggerAppCompatActivity(), B
     fun showMessage(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
+
+    abstract fun onAttach()
+
+    abstract fun hideProgressBar()
+
+    abstract fun showProgressBar()
 
     abstract fun showSnackBar(@StringRes stringRes: Int)
 

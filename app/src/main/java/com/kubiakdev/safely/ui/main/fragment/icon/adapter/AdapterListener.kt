@@ -1,5 +1,8 @@
 package com.kubiakdev.safely.ui.main.fragment.icon.adapter
 
-interface AdapterListener {
+import com.kubiakdev.safely.base.adapter.BaseAdapterListener
 
+interface AdapterListener : BaseAdapterListener {
+
+    fun onIconClicked(iconResId: Int)
 }

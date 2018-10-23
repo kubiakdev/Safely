@@ -1,5 +1,5 @@
 package com.kubiakdev.safely.data.model
 
-import androidx.annotation.IdRes
+import androidx.annotation.DrawableRes
 
-data class IconModel(@IdRes val iconResId: Int) : Model
+data class IconModel(@DrawableRes val iconResId: Int) : Model
