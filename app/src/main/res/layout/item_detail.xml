@@ -8,7 +8,7 @@
     android:layout_marginTop="@dimen/margin_card"
     android:layout_marginBottom="@dimen/margin_card">
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/iv_detail_item_icon"
         android:layout_width="24dp"
         android:layout_height="24dp"
@@ -17,7 +17,7 @@
         android:layout_marginEnd="@dimen/margin_password_item_horizontal"
         android:layout_marginRight="@dimen/margin_password_item_horizontal"
         android:contentDescription="@string/detail_icon_desc"
-        android:src="@drawable/ic_more"
+        app:srcCompat="@drawable/ic_more"
         app:layout_constraintBottom_toTopOf="@id/v_detail_item_separator"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -26,7 +26,7 @@
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/et_detail_item_key"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_password_item_horizontal"
         android:layout_marginLeft="@dimen/margin_detail_item_horizontal"
@@ -36,8 +36,9 @@
         android:fontFamily="@font/font_sans"
         android:hint="@string/password_title_hint"
         android:inputType="textCapSentences|textMultiLine"
-        android:maxLines="7"
+        android:ellipsize="end"
         android:scrollHorizontally="false"
+        android:singleLine="false"
         android:textColor="@color/textColorSecondary"
         android:textSize="@dimen/fontSize_key"
         app:layout_constraintBottom_toTopOf="@id/v_detail_item_separator"
@@ -49,7 +50,7 @@
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/et_detail_item_value"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_password_item_horizontal"
         android:layout_marginLeft="@dimen/margin_password_item_horizontal"
@@ -58,8 +59,9 @@
         android:fontFamily="@font/font_sans"
         android:hint="@string/password_value_hint"
         android:inputType="textCapSentences|textMultiLine"
-        android:maxLines="7"
+        android:ellipsize="end"
         android:scrollHorizontally="false"
+        android:singleLine="false"
         android:textColor="@color/textColorPrimary"
         android:textSize="@dimen/fontSize_value"
         app:layout_constraintBottom_toTopOf="@id/v_detail_item_separator"
@@ -68,7 +70,7 @@
         app:layout_constraintStart_toEndOf="@+id/iv_detail_item_icon"
         app:layout_constraintTop_toBottomOf="@id/et_detail_item_key" />
 
-    <ImageButton
+    <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/ib_detail_item_show"
         android:layout_width="24dp"
         android:layout_height="0dp"
@@ -78,14 +80,14 @@
         android:layout_marginRight="@dimen/margin_password_item_horizontal"
         android:background="@null"
         android:contentDescription="@string/detail_show_desc"
-        android:src="@drawable/ic_visibility"
+        app:srcCompat="@drawable/ic_visibility_on"
         app:layout_constraintBottom_toTopOf="@id/v_detail_item_separator"
         app:layout_constraintEnd_toStartOf="@+id/ib_detail_item_copy"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
+    <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/ib_detail_item_copy"
         android:layout_width="24dp"
         android:layout_height="0dp"
@@ -95,7 +97,7 @@
         android:layout_marginRight="@dimen/margin_password_item_horizontal"
         android:background="@null"
         android:contentDescription="@string/detail_copy_desc"
-        android:src="@drawable/ic_copy"
+        app:srcCompat="@drawable/ic_copy"
         app:layout_constraintBottom_toTopOf="@id/v_detail_item_separator"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"

@@ -5,13 +5,10 @@ import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import com.kubiakdev.safely.util.extension.hideKeyboard
 import dagger.android.support.DaggerAppCompatActivity
-import javax.inject.Inject
 
-abstract class BaseActivity<P : BasePresenter<*>> : DaggerAppCompatActivity(), BaseView {
-
-    @Inject
-    lateinit var presenter: P
+abstract class BaseActivity : DaggerAppCompatActivity(), BaseView {
 
     var fragmentListener: FragmentListener? = null
 
@@ -19,27 +16,25 @@ abstract class BaseActivity<P : BasePresenter<*>> : DaggerAppCompatActivity(), B
 
     protected abstract val navControllerId: Int
 
-    protected lateinit var navController : NavController
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(layoutId)
-        onAttach()
         navController = Navigation.findNavController(this, navControllerId)
         launchFragment()
         setActionBar()
     }
 
-    override fun onDestroy() {
-        presenter.onDetach()
-        super.onDestroy()
+    override fun onStop() {
+        currentFocus?.hideKeyboard()
+        super.onStop()
     }
 
-    fun showMessage(message: String) {
+
+    fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
-
-    abstract fun onAttach()
 
     abstract fun hideProgressBar()
 
@@ -47,8 +42,9 @@ abstract class BaseActivity<P : BasePresenter<*>> : DaggerAppCompatActivity(), B
 
     abstract fun showSnackBar(@StringRes stringRes: Int)
 
+    abstract fun dismissSnackBar()
+
     open fun setActionBar() {}
 
     protected open fun launchFragment() {}
-
 }

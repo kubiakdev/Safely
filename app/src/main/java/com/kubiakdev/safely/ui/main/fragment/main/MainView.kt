@@ -1,4 +1,4 @@
-package com.kubiakdev.safely.ui.main.fragment.main.mvp.main
+package com.kubiakdev.safely.ui.main.fragment.main
 
 import com.kubiakdev.safely.base.BaseView
 

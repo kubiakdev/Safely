@@ -11,24 +11,14 @@ import com.kubiakdev.safely.base.adapter.OnStartDragListener
 import com.kubiakdev.safely.ui.main.activity.MainActivity
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.activity_main.*
-import javax.inject.Inject
 
-abstract class BaseFragment<P : BasePresenter<*>> :
+abstract class BaseFragment :
         DaggerFragment(),
         BaseView,
         FragmentListener,
         OnStartDragListener {
 
-    @Inject
-    lateinit var presenter: P
-        internal set
-
     abstract val layoutId: Int
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        onAttach()
-    }
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -40,13 +30,9 @@ abstract class BaseFragment<P : BasePresenter<*>> :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as BaseActivity<*>).fragmentListener = this
+        (activity as BaseActivity).fragmentListener = this
+        initActivityComponents()
         initComponents()
-    }
-
-    override fun onStop() {
-        presenter.onDetach()
-        super.onStop()
     }
 
     protected open fun inflateView(
@@ -60,12 +46,12 @@ abstract class BaseFragment<P : BasePresenter<*>> :
 
     override fun doOnMenuActionClick(action: String, value: Boolean) {}
 
-    abstract fun onAttach()
+    protected open fun initActivityComponents() {}
 
-    open fun initComponents() {}
+    protected open fun initComponents() {}
 
-    fun showMessage(message: String) {
-        (activity as BaseActivity<*>).showMessage(message)
+    fun showToast(message: String) {
+        (activity as BaseActivity).showToast(message)
     }
 
     fun showSnackBar(@StringRes stringRes: Int) {
@@ -94,7 +80,7 @@ abstract class BaseFragment<P : BasePresenter<*>> :
         views.forEach {
             it.visibility = if (shouldBeVisible && it.visibility != View.VISIBLE) {
                 View.VISIBLE
-            } else if (!shouldBeVisible && it.visibility != View.GONE ) {
+            } else if (!shouldBeVisible && it.visibility != View.GONE) {
                 View.GONE
             } else {
                 it.visibility

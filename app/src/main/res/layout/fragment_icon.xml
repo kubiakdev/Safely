@@ -2,6 +2,7 @@
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <LinearLayout
@@ -10,7 +11,7 @@
         android:layout_marginTop="@dimen/margin_title_top"
         android:orientation="horizontal">
 
-        <ImageButton
+        <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/ib_icon_arrow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -20,7 +21,7 @@
             android:layout_marginEnd="@dimen/margin_nav_arrow_horizontal"
             android:layout_marginRight="@dimen/margin_nav_arrow_horizontal"
             android:background="@null"
-            android:src="@drawable/ic_arrow_back" />
+            app:srcCompat="@drawable/ic_arrow_back" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_icon_title"

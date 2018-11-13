@@ -1,5 +1,14 @@
 <resources>
     <string name="all_empty"/>
+    <string name="all_delete_on">Delete mode on</string>
+    <string name="all_delete_off">Delete mode off</string>
+    <string name="all_edit_on">Edit mode on</string>
+    <string name="all_edit_off">Edit mode off</string>
+    <string name="all_value_copied">Value copied</string>
+    <string name="all_add">Add</string>
+    <string name="all_edit">Edit</string>
+    <string name="all_delete">Delete</string>
+    <string name="all_placeholder_res">R.drawable.ic_image</string>
 
     <string name="all_new_title">Title</string>
     <string name="all_new_username">Username</string>
@@ -21,9 +30,6 @@
     <string name="password_value_hint">Value</string>
     <string name="password_title_new">New password</string>
     <string name="password_record_new">Add record</string>
-
-    <string name="password_delete_on">Delete mode on</string>
-    <string name="password_delete_off">Delete mode off</string>
     
     <string name="detail_icon_desc">Icon</string>
     <string name="detail_show_desc">Show</string>

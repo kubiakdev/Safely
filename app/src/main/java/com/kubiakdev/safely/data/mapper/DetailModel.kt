@@ -3,7 +3,7 @@ package com.kubiakdev.safely.data.mapper
 import com.kubiakdev.safely.data.db.entity.DetailEntity
 import com.kubiakdev.safely.data.model.DetailModel
 
-fun mapEntityToModel(entity: DetailEntity): DetailModel = DetailModel(
+fun entityToModel(entity: DetailEntity): DetailModel = DetailModel(
         entity.id,
         entity.iconResId,
         entity.key,
@@ -11,7 +11,7 @@ fun mapEntityToModel(entity: DetailEntity): DetailModel = DetailModel(
         entity.isShown
 )
 
-fun mapModelToEntity(model: DetailModel): DetailEntity = DetailEntity(
+fun modelToEntity(model: DetailModel): DetailEntity = DetailEntity(
         model.id,
         model.iconResId,
         model.key,

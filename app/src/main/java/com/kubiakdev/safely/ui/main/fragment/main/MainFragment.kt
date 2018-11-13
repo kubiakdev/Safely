@@ -4,19 +4,13 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.kubiakdev.safely.R
 import com.kubiakdev.safely.base.BaseFragment
-import com.kubiakdev.safely.ui.main.fragment.main.mvp.main.MainPresenter
-import com.kubiakdev.safely.ui.main.fragment.main.mvp.main.MainView
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainFragment : BaseFragment<MainPresenter>(), MainView {
+class MainFragment : BaseFragment(), MainView {
 
     override val layoutId: Int = R.layout.fragment_main
 
-    override fun onAttach() {
-        presenter.view = this
-    }
-
-    override fun initComponents() {
+    override fun initActivityComponents() {
         activity?.run {
             bar_main?.run {
                 replaceMenu(R.menu.menu_main)

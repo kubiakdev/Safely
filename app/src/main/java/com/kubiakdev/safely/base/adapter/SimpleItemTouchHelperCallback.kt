@@ -8,7 +8,8 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 
 class SimpleItemTouchHelperCallback(
         var adapter: ItemTouchHelperAdapter,
-        var isInDeleteMode: Boolean = false
+        var isInDeleteMode: Boolean = false,
+        var onUpdateDataList: () -> Unit
 ) : ItemTouchHelper.Callback() {
 
     override fun isLongPressDragEnabled(): Boolean = true
@@ -19,14 +20,21 @@ class SimpleItemTouchHelperCallback(
             recyclerView: RecyclerView,
             viewHolder: RecyclerView.ViewHolder
     ): Int {
-        if (recyclerView.layoutManager is StaggeredGridLayoutManager) {
-            return ItemTouchHelper.Callback.makeMovementFlags(
-                    ItemTouchHelper.UP or ItemTouchHelper.DOWN or
-                            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-                    , 0
-            )
+        return if (recyclerView.layoutManager is StaggeredGridLayoutManager) {
+            if (isInDeleteMode) {
+                ItemTouchHelper.Callback.makeMovementFlags(
+                        0,
+                        ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+                )
+            } else {
+                ItemTouchHelper.Callback.makeMovementFlags(
+                        ItemTouchHelper.UP or ItemTouchHelper.DOWN or
+                                ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+                        , 0
+                )
+            }
         } else {
-            return if (isInDeleteMode) {
+            if (isInDeleteMode) {
                 ItemTouchHelper.Callback.makeMovementFlags(
                         0,
                         ItemTouchHelper.START or ItemTouchHelper.END
@@ -49,12 +57,14 @@ class SimpleItemTouchHelperCallback(
             false
         } else {
             adapter.onItemMove(source.adapterPosition, target.adapterPosition)
+            onUpdateDataList.invoke()
             true
         }
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, i: Int) {
         adapter.onItemDismiss(viewHolder.adapterPosition)
+        onUpdateDataList.invoke()
     }
 
     override fun onChildDraw(

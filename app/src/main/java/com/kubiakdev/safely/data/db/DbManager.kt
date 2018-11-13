@@ -7,31 +7,25 @@ import com.kubiakdev.safely.data.db.entity.PasswordEntity
 import io.objectbox.Box
 import io.objectbox.BoxStore
 import io.reactivex.Observable
-import io.reactivex.Scheduler
-import io.reactivex.android.schedulers.AndroidSchedulers
-import kotlinx.coroutines.experimental.Deferred
-import kotlinx.coroutines.experimental.async
 
 class DbManager : DataManager {
 
-//    override fun getAllDetailEntities(
-//            scheduler: Scheduler
-//    ): Observable<List<DetailEntity>> =
-//            Observable.fromCallable {
-//                BoxStore.getDefault().boxFor(DetailEntity::class.java).all
-//            }
-//                    .doOnError { it.printStackTrace() }
-//                    .observeOn(AndroidSchedulers.mainThread())
-//                    .subscribeOn(scheduler)
+    override val boxStore: BoxStore = BoxStore.getDefault()
 
-    override fun getAllDetailEntities() : MutableList<DetailEntity> =
+    override val detailBox: Box<DetailEntity> =
+            BoxStore.getDefault().boxFor(DetailEntity::class.java)
+
+    override var allDetailEntities: List<DetailEntity> =
             BoxStore.getDefault().boxFor(DetailEntity::class.java).all
+        set(collection) {
+            BoxStore.getDefault().boxFor(DetailEntity::class.java).run {
+                removeAll()
+                put(collection)
+            }
+        }
 
     override val cipherBox: Observable<Box<CipherEntity>> =
             Observable.fromCallable { BoxStore.getDefault().boxFor(CipherEntity::class.java) }
-
-//    override val noteBox: Observable<Box<NoteEntity>>
-//        get() = Observable.fromCallable { BoxStore.getDefault().boxFor(NoteEntity::class.java) }
 
     override val passwordBox: Observable<Box<PasswordEntity>> = Observable.fromCallable {
         BoxStore.getDefault().boxFor(PasswordEntity::class.java)
@@ -41,10 +35,6 @@ class DbManager : DataManager {
         BoxStore.getDefault().boxFor(CipherEntity::class.java).all
     }
 
-//    override val allNoteEntities: Observable<NoteEntity>
-//        get() = Observable.fromCallable { BoxStore.getDefault().boxFor(NoteEntity::class.java).all }
-//                .flatMapIterable { contentEntities -> contentEntities }
-
     override val allPasswordEntities: Observable<List<PasswordEntity>> = Observable.fromCallable {
         BoxStore.getDefault().boxFor(PasswordEntity::class.java).all
     }
@@ -53,23 +43,9 @@ class DbManager : DataManager {
         BoxStore.getDefault().boxFor(CipherEntity::class.java).put(entity)
     }
 
-//    override fun add(entity: NoteEntity): Observable<Long> = Observable.fromCallable {
-//        BoxStore.getDefault().boxFor(NoteEntity::class.java).put(entity)
-//    }
-
     override fun add(entity: PasswordEntity): Observable<Long> = Observable.fromCallable {
         BoxStore.getDefault().boxFor(PasswordEntity::class.java).put(entity)
     }
-
-//    override fun getNoteEntity(entity: NoteEntity): Observable<NoteEntity> =
-//            Observable.fromCallable {
-//                BoxStore.getDefault().boxFor(NoteEntity::class.java).query()
-////                        .equal(NoteEntity_.content, entity.content!!)
-////                        .equal(NoteEntity_.created, entity.created!!)
-////                        .equal(NoteEntity_.modified, entity.modified!!)
-////                        .equal(NoteEntity_.isBookmarked, entity.isBookmarked)
-//                        .build().findFirst()
-//            }
 
     override fun getPasswordEntity(entity: PasswordEntity): Observable<PasswordEntity> =
             Observable.fromCallable {

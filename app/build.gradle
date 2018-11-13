@@ -17,8 +17,9 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {
@@ -34,30 +35,25 @@ android {
     }
 }
 
-kotlin {
-    experimental {
-        coroutines "enable"
-    }
-}
-
 ext {
     adapterDelegates_version = '3.0.1'
-    appCompat_version = '1.0.0'
+    appCompat_version = '1.0.2'
     circleIndicator_version = '1.2.2@aar'
     constraintLayout_version = '1.1.3'
-    coroutines_version = '0.23.0'
-    core_version = '1.0.0'
-    dagger_version = '2.15'
+    coroutines_version = '1.0.0-RC1'
+    core_version = '1.0.1'
+    dagger_version = '2.16'
     easyPrefs_version = '1.9.0'
     espresso_version = '3.1.0-alpha4'
     junit_version = '4.12'
     leakCanary_version = '1.5.4'
+    lifecycle_version = '1.1.1'
     material_version = '1.0.0'
-    navigation_version = '1.0.0-alpha06'
+    navigation_version = '1.0.0-alpha07'
     patternLock_version = '1.0.0'
     pinLock_version = '2.1.0'
     runner_version = '1.1.0-alpha4'
-    rxAndroid_version = '2.0.2'
+    rxAndroid_version = '2.1.0'
     rxKotlin_version = '2.2.0'
     rxLifecycle_version = '2.2.1'
 }
@@ -70,14 +66,8 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
     androidTestImplementation "androidx.test:runner:$runner_version"
 
-    //AdapterDelegate
-    implementation "com.hannesdorfmann:adapterdelegates3:$adapterDelegates_version"
-
     //AppCompat
     implementation "androidx.appcompat:appcompat:$appCompat_version"
-
-    //CircleIndicator
-    implementation "me.relex:circleindicator:$circleIndicator_version"
 
     //ConstraintLayout
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayout_version"
@@ -93,12 +83,19 @@ dependencies {
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
     kapt "com.google.dagger:dagger-android-processor:$dagger_version"
 
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib"
+
     //EasyPrefs
     implementation "com.pixplicity.easyprefs:library:$easyPrefs_version"
 
     //LeakCanary
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanary_version"
     releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanary_version"
+
+    //Lifecycle
+    implementation "android.arch.lifecycle:extensions:$lifecycle_version"
+    annotationProcessor "android.arch.lifecycle:compiler:$lifecycle_version"
 
     //Material
     implementation "com.google.android.material:material:$material_version"

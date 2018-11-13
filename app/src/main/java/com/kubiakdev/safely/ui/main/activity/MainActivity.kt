@@ -4,62 +4,59 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.annotation.StringRes
-import androidx.core.content.ContextCompat
-import androidx.core.view.get
 import com.google.android.material.snackbar.Snackbar
 import com.kubiakdev.safely.R
 import com.kubiakdev.safely.base.BaseActivity
 import com.kubiakdev.safely.ui.main.MainValues
-import com.kubiakdev.safely.util.KeyboardUtil
+import com.kubiakdev.safely.util.extension.hideKeyboard
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : BaseActivity<MainPresenter>(), MainView {
+class MainActivity : BaseActivity(), MainView {
 
     override val layoutId: Int = R.layout.activity_main
 
     override val navControllerId: Int = R.id.nav_host_main
 
-    var isInDeletePasswordMode = false
-    private var menu: Menu? = null
+    var menu: Menu? = null
+
+    private lateinit var snackBar: Snackbar
 
     override fun setActionBar() {
         setSupportActionBar(bar_main)
     }
 
-    override fun onAttach() {
-        presenter.view = this
-    }
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
-        this.menu = menu
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        KeyboardUtil.hideKeyboard(currentFocus ?: View(this))
-        when (item?.itemId) {
-            R.id.action_password_add -> {
-                navController.navigate(R.id.action_passwordFragment_to_detailFragment)
-                return true
-            }
-            R.id.action_detail_add -> {
-                navController.navigate(R.id.action_detailFragment_to_templateFragment)
-                return true
-            }
-            R.id.action_template_save -> {
-                fragmentListener?.doOnMenuActionClick(MainValues.ACTION_TEMPLATE_SAVE)
-            }
-            R.id.action_password_delete -> {
-                isInDeletePasswordMode = !isInDeletePasswordMode
-                switchDeleteMode()
-                fragmentListener
-                        ?.doOnMenuActionClick(
-                                MainValues.ACTION_PASSWORD_DELETE,
-                                isInDeletePasswordMode
-                        )
-            }
-        }
+        bar_main.hideKeyboard()
+        fragmentListener?.doOnMenuActionClick(
+                when (item?.itemId) {
+                    R.id.action_password_add -> {
+                        MainValues.ACTION_PASSWORD_ADD
+                    }
+                    R.id.action_detail_add -> {
+                        MainValues.ACTION_DETAIL_ADD
+                    }
+                    R.id.action_detail_delete -> {
+                        MainValues.ACTION_DETAIL_DELETE
+                    }
+                    R.id.action_detail_edit -> {
+                        MainValues.ACTION_DETAIL_EDIT
+                    }
+                    R.id.action_template_save -> {
+                        MainValues.ACTION_TEMPLATE_SAVE
+                    }
+                    R.id.action_password_delete -> {
+                        MainValues.ACTION_PASSWORD_DELETE
+                    }
+                    else -> {
+                        ""
+                    }
+                }
+        )
         return super.onOptionsItemSelected(item)
     }
 
@@ -72,16 +69,12 @@ class MainActivity : BaseActivity<MainPresenter>(), MainView {
     }
 
     override fun showSnackBar(@StringRes stringRes: Int) {
-        Snackbar.make(findViewById(R.id.cl_main_snack), stringRes, Snackbar.LENGTH_SHORT).show()
+        snackBar = Snackbar.make(
+                findViewById(R.id.cl_main_snack), stringRes, Snackbar.LENGTH_SHORT
+        ).apply { show() }
     }
 
-    fun switchDeleteMode() {
-        menu?.get(0)?.icon = if (isInDeletePasswordMode) {
-            ContextCompat.getDrawable(this, R.drawable.ic_delete_on).also {
-                showSnackBar(R.string.password_delete_on)
-            }
-        } else {
-            ContextCompat.getDrawable(this, R.drawable.ic_delete_off)
-        }
+    override fun dismissSnackBar() {
+        snackBar.dismiss()
     }
 }

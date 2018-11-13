@@ -4,10 +4,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.kubiakdev.safely.R
-import com.kubiakdev.safely.data.model.IconModel
 import com.kubiakdev.safely.base.adapter.BaseAdapter
 import com.kubiakdev.safely.base.adapter.BaseAdapterListener
 import com.kubiakdev.safely.base.adapter.OnStartDragListener
+import com.kubiakdev.safely.data.model.IconModel
+import com.kubiakdev.safely.util.extension.setSameOnClickListenerFor
 import kotlinx.android.synthetic.main.item_icon.view.*
 
 class IconAdapter(
@@ -29,12 +30,15 @@ class IconAdapter(
     ) : BaseAdapter.BaseHolder<IconModel>(view, adapterListener) {
 
         override fun bindHolder(model: IconModel, dragListener: OnStartDragListener) {
-            view.ib_icon.run {
-                setImageResource(model.iconResId)
-                tag = model.iconResId
-                setOnClickListener {
-                    adapterListener.onIconClicked(model.iconResId)
+            view.run {
+                ib_icon.run {
+                    setImageResource(model.iconResId)
+                    contentDescription = model.iconResId.toString()
                 }
+                setSameOnClickListenerFor(
+                        { adapterListener.onIconClicked(model.iconResId) },
+                        mcv_icon, cl_icon, ib_icon
+                )
             }
         }
     }

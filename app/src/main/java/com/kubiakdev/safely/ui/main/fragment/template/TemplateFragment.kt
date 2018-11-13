@@ -1,38 +1,78 @@
 package com.kubiakdev.safely.ui.main.fragment.template
 
-import android.os.Bundle
-import android.view.View
+import android.text.Editable
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.kubiakdev.safely.R
-import com.kubiakdev.safely.data.model.TemplateModel
 import com.kubiakdev.safely.base.BaseFragment
+import com.kubiakdev.safely.data.model.TemplateModel
 import com.kubiakdev.safely.ui.main.MainValues
+import com.kubiakdev.safely.util.delegate.DefaultArgumentsDelegate
+import com.kubiakdev.safely.util.extension.getViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_template.*
+import javax.inject.Inject
 
-class TemplateFragment : BaseFragment<TemplatePresenter>(), TemplateView {
+class TemplateFragment : BaseFragment(), TemplateView {
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     override val layoutId: Int = R.layout.fragment_template
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        findNavController().graph.defaultArguments.run {
-            if (containsKey(MainValues.EXTRA_ICON_RES_ID)) {
-                ib_template_icon.setImageResource(getInt(MainValues.EXTRA_ICON_RES_ID))
-                remove(MainValues.EXTRA_ICON_RES_ID)
-            }
-        }
+    private val viewModel: TemplateViewModel by lazy {
+        getViewModel<TemplateViewModel>(viewModelFactory)
     }
 
-    override fun onAttach() {
-        presenter.view = this
-    }
+    private var NavController.templateIconResId by DefaultArgumentsDelegate.Int(
+            MainValues.EXTRA_TEMPLATE_ICON_RES_ID
+    )
+
+    private var NavController.templateKey by DefaultArgumentsDelegate.String(
+            MainValues.EXTRA_TEMPLATE_KEY
+    )
+
+    private var NavController.detailIconResId by DefaultArgumentsDelegate.Int(
+            MainValues.EXTRA_DETAIL_ICON_RES_ID
+    )
+
+    private var NavController.detailKey by DefaultArgumentsDelegate.String(
+            MainValues.EXTRA_DETAIL_KEY
+    )
+
+    private var NavController.detailEditedItemIndex by DefaultArgumentsDelegate.Int(
+            MainValues.EXTRA_DETAIL_EDITED_ITEM_INDEX
+    )
+
+    private var cachedIconResId: Int? = null
+    private var cachedKey: String? = null
 
     override fun initComponents() {
-        hideFullFragment()
         activity?.bar_main?.replaceMenu(R.menu.menu_template)
+
         ib_template_icon.setOnClickListener {
             findNavController().navigate(R.id.action_templateFragment_to_iconFragment)
+        }
+
+        findNavController().run {
+            if (templateIconResId != -1 && templateKey != "") {
+                ib_template_icon.run {
+                    setImageResource(templateIconResId)
+                    contentDescription = templateIconResId.toString()
+                }
+                et_template_key.text = Editable.Factory.getInstance().newEditable(templateKey)
+                cachedIconResId = templateIconResId
+                cachedKey = templateKey
+            } else {
+                if (templateIconResId == -1) {
+                    templateIconResId = R.drawable.ic_image
+                }
+                ib_template_icon.run {
+                    setImageResource(templateIconResId)
+                    contentDescription = templateIconResId.toString()
+                }
+            }
         }
     }
 
@@ -42,7 +82,6 @@ class TemplateFragment : BaseFragment<TemplatePresenter>(), TemplateView {
                 onTemplateSave()
             }
             MainValues.ACTION_PASSWORD_DELETE -> {
-                println("dupa")
             }
         }
     }
@@ -52,22 +91,27 @@ class TemplateFragment : BaseFragment<TemplatePresenter>(), TemplateView {
             if (text.toString() == "") {
                 showSnackBar(R.string.template_notnull_key_required)
             } else {
-                addTemplate(
-                        TemplateModel(
-                                ib_template_icon.contentDescription.toString().toInt(),
-                                text.toString()
-                        )
-                )
+                val currentIconResId = ib_template_icon.contentDescription.toString().toInt()
+                val currentKey = text.toString()
+                if ((cachedIconResId != null && cachedKey != null)
+                        && (currentIconResId != cachedIconResId || currentKey != cachedKey)) {
+                    viewModel.editTemplateAndBack(
+                            TemplateModel(currentIconResId, currentKey),
+                            findNavController().detailEditedItemIndex
+                    ) {
+                        findNavController().popBackStack()
+                    }
+                } else {
+                    addTemplateAndBack(TemplateModel(currentIconResId, currentKey))
+                }
             }
         }
     }
 
-    private fun addTemplate(model: TemplateModel) {
+    private fun addTemplateAndBack(model: TemplateModel) {
         findNavController().run {
-            graph.defaultArguments.apply {
-                putInt(MainValues.EXTRA_TEMPLATE_ICON_RES_ID, model.iconResId)
-                putString(MainValues.EXTRA_TEMPLATE_KEY, model.key)
-            }
+            detailIconResId = model.iconResId
+            detailKey = model.key
             popBackStack()
         }
     }

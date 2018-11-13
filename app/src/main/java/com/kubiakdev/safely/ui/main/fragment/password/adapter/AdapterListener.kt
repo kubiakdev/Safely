@@ -8,4 +8,6 @@ interface AdapterListener : BaseAdapterListener {
     fun showSnackBar(@StringRes stringRes: Int)
 
     fun switchOffDeleteMode()
+
+    fun setTitleText(text: String)
 }
