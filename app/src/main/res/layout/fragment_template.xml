@@ -4,24 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_template_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_title_left"
-        android:layout_marginLeft="@dimen/margin_title_left"
-        android:layout_marginTop="@dimen/margin_title_top"
-        android:layout_marginBottom="@dimen/margin_title_top"
-        android:fontFamily="@font/font_sans"
-        android:text="@string/template_title"
-        android:textColor="@color/textColorPrimary"
-        android:textSize="@dimen/fontSize_title"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_template_icon"
@@ -29,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/margin_title_left"
         android:layout_marginLeft="@dimen/margin_title_left"
-        android:layout_marginTop="@dimen/margin_title_top"
+        android:layout_marginTop="@dimen/margin_title_vertical"
         android:fontFamily="@font/font_sans"
         android:text="@string/template_icon_select"
         android:textColor="@color/textColorSecondary"
@@ -39,7 +21,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_template_title"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 
     <androidx.appcompat.widget.AppCompatImageButton
@@ -49,7 +31,7 @@
         android:layout_marginStart="@dimen/margin_title_left"
         android:layout_marginLeft="@dimen/margin_title_left"
         android:layout_marginTop="@dimen/margin_small"
-        android:layout_marginBottom="@dimen/margin_title_top"
+        android:layout_marginBottom="@dimen/margin_title_vertical"
         android:background="@drawable/background_rectangle_orange"
         app:srcCompat="@drawable/ic_image"
         app:layout_constraintBottom_toBottomOf="parent"

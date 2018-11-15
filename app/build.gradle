@@ -33,6 +33,9 @@ android {
     packagingOptions {
         exclude 'META-INF/main.kotlin_module'
     }
+    lintOptions{
+        disable 'GoogleAppIndexingWarning'
+    }
 }
 
 ext {

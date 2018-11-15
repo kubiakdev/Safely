@@ -11,7 +11,7 @@
     <dimen name="margin_nav_arrow_horizontal">16dp</dimen>
     <dimen name="margin_card_vertical">28dp</dimen>
     <dimen name="margin_title_left">56dp</dimen>
-    <dimen name="margin_title_top">28dp</dimen>
+    <dimen name="margin_title_vertical">28dp</dimen>
     <dimen name="margin_rv_top">28dp</dimen>
     <dimen name="margin_tvCard_vertical">21dp</dimen>
     <dimen name="margin_password_item_horizontal">7dp</dimen>

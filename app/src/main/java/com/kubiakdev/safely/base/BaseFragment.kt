@@ -8,9 +8,9 @@ import androidx.annotation.StringRes
 import androidx.recyclerview.widget.RecyclerView
 import com.kubiakdev.safely.R
 import com.kubiakdev.safely.base.adapter.OnStartDragListener
-import com.kubiakdev.safely.ui.main.activity.MainActivity
+import com.kubiakdev.safely.ui.activity.FrameActivity
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_frame.*
 
 abstract class BaseFragment :
         DaggerFragment(),
@@ -19,6 +19,8 @@ abstract class BaseFragment :
         OnStartDragListener {
 
     abstract val layoutId: Int
+
+    protected val activity by lazy { this.getActivity() as FrameActivity }
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -30,9 +32,10 @@ abstract class BaseFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as BaseActivity).fragmentListener = this
+        activity.fragmentListener = this
         initActivityComponents()
         initComponents()
+
     }
 
     protected open fun inflateView(
@@ -50,14 +53,8 @@ abstract class BaseFragment :
 
     protected open fun initComponents() {}
 
-    fun showToast(message: String) {
-        (activity as BaseActivity).showToast(message)
-    }
-
     fun showSnackBar(@StringRes stringRes: Int) {
-        if (activity is MainActivity) {
-            (activity as MainActivity).showSnackBar(stringRes)
-        }
+        activity.showSnackBar(stringRes)
     }
 
     fun hideFullFragment() = switchBarAndFabVisibility(true).also {
@@ -69,10 +66,8 @@ abstract class BaseFragment :
     }
 
     private fun switchBarAndFabVisibility(shouldBeVisible: Boolean) {
-        if (activity is MainActivity) {
-            activity?.run {
-                changeVisibility(shouldBeVisible, bar_main, fab_main, v_shadow_main)
-            }
+        activity.run {
+            changeVisibility(shouldBeVisible, bar_frame, fab_frame, v_shadow_frame)
         }
     }
 
@@ -91,7 +86,7 @@ abstract class BaseFragment :
 
     private fun changeFragmentBottomMargin(shouldBeZero: Boolean) {
         val barHeight = resources.getDimension(R.dimen.height_bar).toInt()
-        (activity?.nav_host_main?.view?.layoutParams as ViewGroup.MarginLayoutParams).run {
+        (activity.nav_host_frame?.view?.layoutParams as ViewGroup.MarginLayoutParams).run {
             bottomMargin = if (shouldBeZero && bottomMargin != 0) {
                 0
             } else if (!shouldBeZero && bottomMargin != barHeight) {

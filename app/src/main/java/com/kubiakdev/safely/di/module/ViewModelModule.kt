@@ -3,10 +3,10 @@ package com.kubiakdev.safely.di.module
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.kubiakdev.safely.di.annotation.ViewModelKey
-import com.kubiakdev.safely.ui.main.fragment.detail.DetailViewModel
-import com.kubiakdev.safely.ui.main.fragment.icon.IconViewModel
-import com.kubiakdev.safely.ui.main.fragment.password.PasswordViewModel
-import com.kubiakdev.safely.ui.main.fragment.template.TemplateViewModel
+import com.kubiakdev.safely.ui.detail.DetailViewModel
+import com.kubiakdev.safely.ui.icon.IconViewModel
+import com.kubiakdev.safely.ui.password.PasswordViewModel
+import com.kubiakdev.safely.ui.template.TemplateViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -16,13 +16,6 @@ abstract class ViewModelModule {
 
     @Binds
     internal abstract fun bindViewModelFactory(factory: ViewModelFactory): ViewModelProvider.Factory
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(com.kubiakdev.safely.ui.main.activity.MainViewModel::class)
-    internal abstract fun mainActivityViewModel(
-            viewModel: com.kubiakdev.safely.ui.main.activity.MainViewModel
-    ): ViewModel
 
     @Binds
     @IntoMap
@@ -36,9 +29,9 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(com.kubiakdev.safely.ui.main.fragment.main.MainViewModel::class)
+    @ViewModelKey(com.kubiakdev.safely.ui.main.MainViewModel::class)
     internal abstract fun mainViewModel(
-            viewModel: com.kubiakdev.safely.ui.main.fragment.main.MainViewModel
+            viewModel: com.kubiakdev.safely.ui.main.MainViewModel
     ): ViewModel
 
     @Binds

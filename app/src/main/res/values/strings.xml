@@ -1,4 +1,7 @@
 <resources>
+    <string name="app_name">Safely</string>
+
+
     <string name="all_empty"/>
     <string name="all_delete_on">Delete mode on</string>
     <string name="all_delete_off">Delete mode off</string>
@@ -20,26 +23,18 @@
     <string name="all_new_card_number">Card number</string>
     <string name="all_new_account_number">Account number</string>
 
-    <string name="app_name">Safely</string>
-
-    <string name="icon_title">Icons</string>
-
-    <string name="main_title">Passwords</string>
     <string name="delete_password_question">Delete password?</string>
     <string name="delete_password_yes">Yes</string>
     <string name="delete_password_no">No</string>
 
     <string name="password_title_hint">Title</string>
     <string name="password_value_hint">Value</string>
-    <string name="password_title_new">New password</string>
     <string name="password_record_new">Add record</string>
     
     <string name="detail_icon_desc">Icon</string>
     <string name="detail_show_desc">Show</string>
     <string name="detail_copy_desc">Copy</string>
-    <string name="detail_title">Templates</string>
 
-    <string name="template_title">New template</string>
     <string name="template_icon_select">Select icon &amp; key</string>
     <string name="template_hint_key">Key name</string>
 

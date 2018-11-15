@@ -1,4 +1,4 @@
-package com.kubiakdev.safely.ui.main
+package com.kubiakdev.safely.ui.password
 
 import androidx.fragment.app.Fragment
 import com.kubiakdev.safely.di.annotation.FragmentScope
@@ -7,9 +7,9 @@ import dagger.Binds
 import dagger.Module
 
 @Module(includes = [FragmentModule::class])
-abstract class MainModule {
+abstract class PasswordModule {
 
     @Binds
     @FragmentScope
-    abstract fun fragment(fragment: MainFragment): Fragment
+    abstract fun fragment(fragment: PasswordFragment): Fragment
 }
