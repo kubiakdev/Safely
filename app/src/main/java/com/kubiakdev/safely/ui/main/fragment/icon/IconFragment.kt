@@ -21,7 +21,7 @@ class IconFragment : BaseFragment(), IconView, AdapterListener {
             MainValues.EXTRA_TEMPLATE_ICON_RES_ID
     )
 
-    private val iconAdapter: IconAdapter by lazy {
+    private val adapter: IconAdapter by lazy {
         IconAdapter(MainValues.DEFAULT_ICON_LIST, this)
                 .apply { adapterListener = this@IconFragment }
     }
@@ -39,7 +39,9 @@ class IconFragment : BaseFragment(), IconView, AdapterListener {
     override fun initComponents() {
         rv_icon.run {
             layoutManager = StaggeredGridLayoutManager(5, 1)
-            adapter = iconAdapter
+            adapter = this@IconFragment.adapter.apply {
+                adapterListener = this@IconFragment
+            }.also { it.notifyDataSetChanged() }
         }
 
         ib_icon_arrow.setOnClickListener {

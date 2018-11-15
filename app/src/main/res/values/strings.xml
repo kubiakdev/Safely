@@ -25,6 +25,9 @@
     <string name="icon_title">Icons</string>
 
     <string name="main_title">Passwords</string>
+    <string name="delete_password_question">Delete password?</string>
+    <string name="delete_password_yes">Yes</string>
+    <string name="delete_password_no">No</string>
 
     <string name="password_title_hint">Title</string>
     <string name="password_value_hint">Value</string>

@@ -34,10 +34,10 @@ class DetailViewModel @Inject constructor(
             action = { dataManager.allDetailEntities.map { entityToModel(it) } },
             onSuccess = {
                 if (it.isNotEmpty()) {
-                    response.invoke(it)
+                    response(it)
                 } else {
                     MainValues.DEFAULT_TEMPLATE_LIST.run {
-                        response.invoke(this)
+                        response(this)
                         updateDatabase(this)
                     }
                 }

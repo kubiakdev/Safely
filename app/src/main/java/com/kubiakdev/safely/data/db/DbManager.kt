@@ -12,13 +12,19 @@ class DbManager : DataManager {
 
     override val boxStore: BoxStore = BoxStore.getDefault()
 
-    override val detailBox: Box<DetailEntity> =
-            BoxStore.getDefault().boxFor(DetailEntity::class.java)
-
     override var allDetailEntities: List<DetailEntity> =
             BoxStore.getDefault().boxFor(DetailEntity::class.java).all
         set(collection) {
             BoxStore.getDefault().boxFor(DetailEntity::class.java).run {
+                removeAll()
+                put(collection)
+            }
+        }
+
+    override var allPasswordEntities: List<PasswordEntity> =
+            BoxStore.getDefault().boxFor(PasswordEntity::class.java).all
+        set(collection) {
+            BoxStore.getDefault().boxFor(PasswordEntity::class.java).run {
                 removeAll()
                 put(collection)
             }
@@ -33,10 +39,6 @@ class DbManager : DataManager {
 
     override val allCipherEntities: Observable<List<CipherEntity>> = Observable.fromCallable {
         BoxStore.getDefault().boxFor(CipherEntity::class.java).all
-    }
-
-    override val allPasswordEntities: Observable<List<PasswordEntity>> = Observable.fromCallable {
-        BoxStore.getDefault().boxFor(PasswordEntity::class.java).all
     }
 
     override fun add(entity: CipherEntity): Observable<Long> = Observable.fromCallable {
@@ -59,7 +61,7 @@ class DbManager : DataManager {
 //                        .equal(PasswordEntity_.jsonString, entity.jsonString)
 //                        .equal(PasswordEntity_.created, entity.created)
 //                        .equal(PasswordEntity_.modified, entity.modified)
-//                        .equal(PasswordEntity_.isBookmarked, entity.isBookmarked)
+//                        .equal(PasswordEntity_.isFavourite, entity.isFavourite)
                         .build().findFirst()
             }
 

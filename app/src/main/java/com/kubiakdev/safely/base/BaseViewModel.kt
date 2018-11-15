@@ -28,23 +28,23 @@ open class BaseViewModel(
     ): Job =
             launch(executionContext + parentJob) {
                 Result.runCatching {
-                    action.invoke()
+                    action()
                 }
                         .onSuccess {
                             if (onSuccessContext == executionContext) {
-                                onSuccess.invoke(it)
+                                onSuccess(it)
                             } else {
                                 withContext(onSuccessContext + parentJob) {
-                                    onSuccess.invoke(it)
+                                    onSuccess(it)
                                 }
                             }
                         }
                         .onFailure {
                             if (onFailureContext == executionContext) {
-                                onFailure.invoke(it)
+                                onFailure(it)
                             } else {
                                 withContext(onFailureContext + parentJob) {
-                                    onFailure.invoke(it)
+                                    onFailure(it)
                                 }
                             }
                         }

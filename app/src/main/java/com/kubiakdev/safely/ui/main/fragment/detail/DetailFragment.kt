@@ -59,7 +59,7 @@ class DetailFragment : BaseFragment(), DetailView, AdapterListener {
 
     private lateinit var callback: SimpleItemTouchHelperCallback
 
-    private lateinit var detailAdapter: DetailAdapter
+    private lateinit var adapter: DetailAdapter
 
     private lateinit var itemTouchHelper: ItemTouchHelper
 
@@ -78,11 +78,11 @@ class DetailFragment : BaseFragment(), DetailView, AdapterListener {
             observe(isInEditMode, ::trySwitchEditMode)
         }
 
-        detailAdapter = DetailAdapter(mutableListOf(), this, false)
+        adapter = DetailAdapter(mutableListOf(), this, false)
                 .apply { adapterListener = this@DetailFragment }
                 .also {
-                    getViewModel<DetailViewModel>(viewModelFactory).getData { list ->
-                        detailAdapter.list = list.toMutableList()
+                    viewModel.getData { list ->
+                        adapter.list = list.toMutableList()
                         dataList = list.toMutableList()
                         (activity as MainActivity).hideProgressBar()
                         rv_detail.adapter?.notifyDataSetChanged()
@@ -92,18 +92,18 @@ class DetailFragment : BaseFragment(), DetailView, AdapterListener {
 
 
         callback = SimpleItemTouchHelperCallback(
-                detailAdapter,
+                adapter,
                 getViewModel<DetailViewModel>(viewModelFactory).isInDeleteMode.value
                         ?: false
-        ) { getViewModel<DetailViewModel>(viewModelFactory).updateDatabase(detailAdapter.list) }
+        ) { viewModel.updateDatabase(adapter.list) }
 
         itemTouchHelper = ItemTouchHelper(callback).also { it.attachToRecyclerView(rv_detail) }
 
         rv_detail.run {
             layoutManager = StaggeredGridLayoutManager(2, 1)
-            detailAdapter.adapterListener = this@DetailFragment
-            adapter = detailAdapter
-            detailAdapter.notifyDataSetChanged()
+            adapter = this@DetailFragment.adapter.apply {
+                adapterListener = this@DetailFragment
+            }.also { it.notifyDataSetChanged() }
         }
 
         isInEditMode = viewModel.isInDeleteMode.value ?: false
@@ -115,8 +115,6 @@ class DetailFragment : BaseFragment(), DetailView, AdapterListener {
                 detailKey = ""
             }
         }
-
-        hideFullFragment()
     }
 
 
@@ -157,8 +155,8 @@ class DetailFragment : BaseFragment(), DetailView, AdapterListener {
     }
 
     override fun tryUpdateAdapterList(list: List<DetailModel>?) {
-        val shouldReloadAdapter = detailAdapter.list.size != list?.size
-        detailAdapter.list = list?.toMutableList() ?: mutableListOf()
+        val shouldReloadAdapter = adapter.list.size != list?.size
+        adapter.list = list?.toMutableList() ?: mutableListOf()
         (activity as MainActivity).hideProgressBar()
         if (shouldReloadAdapter) {
             rv_detail?.adapter?.notifyDataSetChanged()
@@ -199,24 +197,24 @@ class DetailFragment : BaseFragment(), DetailView, AdapterListener {
 
     private fun updateAdapterList(navController: NavController) {
         val newModel = DetailModel(navController.detailIconResId, navController.detailKey)
-        detailAdapter.list.add(newModel)
-        viewModel.updateDatabase(detailAdapter.list)
+        adapter.list.add(newModel)
+        viewModel.updateDatabase(adapter.list)
     }
 
     private fun trySwitchEditMode(shouldLaunchEditMode: Boolean?) {
-        if (detailAdapter.list.isNotEmpty()) {
+        if (adapter.list.isNotEmpty()) {
             switchEditMode(shouldLaunchEditMode)
         }
     }
 
     private fun switchEditMode(shouldLaunchEditMode: Boolean?) {
-        detailAdapter.isInEditMode = shouldLaunchEditMode ?: false
+        adapter.isInEditMode = shouldLaunchEditMode ?: false
         setMenuEditIcon(shouldLaunchEditMode ?: false)
 
     }
 
     private fun trySwitchDeleteMode(shouldLaunchDeleteMode: Boolean?) {
-        if (detailAdapter.list.isNotEmpty()) {
+        if (adapter.list.isNotEmpty()) {
             switchDeleteMode(shouldLaunchDeleteMode)
         }
     }

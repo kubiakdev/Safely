@@ -1,11 +1,8 @@
-package com.kubiakdev.safely.data.db.entity
+package com.kubiakdev.safely.data.model
 
-import io.objectbox.annotation.Entity
-import io.objectbox.annotation.Id
 import java.util.*
 
-@Entity
-data class PasswordEntity(
+data class PasswordModel(
         var title: String = "",
         var jsonDetailList: String = "",
         var created: Date = Date(),
@@ -13,9 +10,8 @@ data class PasswordEntity(
         var isFavourite: Boolean = false,
         var cardColor: String = "",
         var category: String = ""
-) {
+) : Model {
 
-    @Id(assignable = true)
     var id: Long = 0
 
     constructor(

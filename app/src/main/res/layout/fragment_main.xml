@@ -17,8 +17,9 @@
         android:fontFamily="@font/font_sans"/>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_main"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_rv_top" />
 
-    </androidx.recyclerview.widget.RecyclerView>
 </androidx.appcompat.widget.LinearLayoutCompat>

@@ -11,17 +11,15 @@ interface DataManager {
 
     val boxStore: BoxStore
 
-    val detailBox: Box<DetailEntity>
-
     var allDetailEntities: List<DetailEntity>
+
+    var allPasswordEntities: List<PasswordEntity>
 
     val cipherBox: Observable<Box<CipherEntity>>
 
     val passwordBox: Observable<Box<PasswordEntity>>
 
     val allCipherEntities: Observable<List<CipherEntity>>
-
-    val allPasswordEntities: Observable<List<PasswordEntity>>
 
     fun add(entity: CipherEntity): Observable<Long>
 

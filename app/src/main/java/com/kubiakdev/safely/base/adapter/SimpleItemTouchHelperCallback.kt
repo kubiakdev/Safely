@@ -57,14 +57,14 @@ class SimpleItemTouchHelperCallback(
             false
         } else {
             adapter.onItemMove(source.adapterPosition, target.adapterPosition)
-            onUpdateDataList.invoke()
+            onUpdateDataList()
             true
         }
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, i: Int) {
         adapter.onItemDismiss(viewHolder.adapterPosition)
-        onUpdateDataList.invoke()
+        onUpdateDataList()
     }
 
     override fun onChildDraw(

@@ -27,6 +27,6 @@ class TemplateViewModel @Inject constructor(
                     dataManager.allDetailEntities = this
                 }.toMutableList()
             },
-            onSuccess = { actionAfterEdit.invoke(it) }
+            onSuccess = { actionAfterEdit(it) }
     )
 }

@@ -52,6 +52,9 @@ class MainActivity : BaseActivity(), MainView {
                     R.id.action_password_delete -> {
                         MainValues.ACTION_PASSWORD_DELETE
                     }
+                    R.id.action_password_save -> {
+                        MainValues.ACTION_PASSWORD_SAVE
+                    }
                     else -> {
                         ""
                     }

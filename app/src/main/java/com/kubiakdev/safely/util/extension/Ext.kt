@@ -6,7 +6,7 @@ import android.view.View
 import android.widget.TextView
 
 fun setSameOnClickListenerFor(action: () -> Unit, vararg views: View) {
-    views.forEach { it.setOnClickListener { action.invoke() } }
+    views.forEach { it.setOnClickListener { action() } }
 }
 
 fun toEditable(value: String): Editable = Editable.Factory.getInstance().newEditable(value)
@@ -14,7 +14,7 @@ fun toEditable(value: String): Editable = Editable.Factory.getInstance().newEdit
 fun TextView.addAfterTextChangedListener(afterTextChanged: (Editable?) -> Unit) {
     this.addTextChangedListener(object : TextWatcher {
         override fun afterTextChanged(s: Editable?) {
-            afterTextChanged.invoke(s)
+            afterTextChanged(s)
         }
 
         override fun beforeTextChanged(

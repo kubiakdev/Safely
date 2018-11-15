@@ -25,6 +25,8 @@ import com.kubiakdev.safely.util.extension.showKeyboard
 import com.kubiakdev.safely.util.extension.withViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_password.*
+import org.json.JSONArray
+import org.json.JSONObject
 import javax.inject.Inject
 
 class PasswordFragment : BaseFragment(), PasswordView, AdapterListener {
@@ -38,7 +40,7 @@ class PasswordFragment : BaseFragment(), PasswordView, AdapterListener {
         getViewModel<PasswordViewModel>(viewModelFactory)
     }
 
-    private val passwordAdapter: PasswordAdapter by lazy {
+    private val adapter: PasswordAdapter by lazy {
         PasswordAdapter(list, this)
     }
 
@@ -87,13 +89,14 @@ class PasswordFragment : BaseFragment(), PasswordView, AdapterListener {
         }
 
         callback = SimpleItemTouchHelperCallback(
-                passwordAdapter, viewModel.isInDeleteMode.value ?: false) {}
+                adapter, viewModel.isInDeleteMode.value ?: false) {}
 
 
         rv_password.run {
             layoutManager = LinearLayoutManager(context)
-            passwordAdapter.adapterListener = this@PasswordFragment
-            adapter = passwordAdapter
+            adapter = this@PasswordFragment.adapter.apply {
+                adapterListener = this@PasswordFragment
+            }.also { it.notifyDataSetChanged() }
         }
 
         itemTouchHelper = ItemTouchHelper(callback).also { it.attachToRecyclerView(rv_password) }
@@ -134,6 +137,9 @@ class PasswordFragment : BaseFragment(), PasswordView, AdapterListener {
             MainValues.ACTION_PASSWORD_ADD -> {
                 findNavController().navigate(R.id.action_passwordFragment_to_detailFragment)
             }
+            MainValues.ACTION_PASSWORD_SAVE -> {
+                savePassword()
+            }
         }
     }
 
@@ -147,12 +153,12 @@ class PasswordFragment : BaseFragment(), PasswordView, AdapterListener {
     }
 
     private fun updateAdapterList(iconResId: Int, key: String) {
-        passwordAdapter.list.add(element = DetailModel(iconResId, key))
+        adapter.list.add(element = DetailModel(iconResId, key))
         rv_password.adapter?.notifyDataSetChanged()
     }
 
     private fun trySwitchDeleteMode(shouldLaunchDeleteMode: Boolean?) {
-        if (passwordAdapter.list.isNotEmpty()) {
+        if (adapter.list.isNotEmpty()) {
             switchDeleteMode(shouldLaunchDeleteMode)
         }
     }
@@ -171,6 +177,13 @@ class PasswordFragment : BaseFragment(), PasswordView, AdapterListener {
             } else {
                 ContextCompat.getDrawable(this, R.drawable.ic_delete_off)
             }
+        }
+    }
+
+    private fun savePassword() {
+        val array = JSONArray()
+        adapter.list.forEach {
+            array.put(JSONObject().apply { put(MainValues.PASSWORD_JSON_OBJECT, it) })
         }
     }
 }
