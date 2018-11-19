@@ -17,12 +17,14 @@ class MainViewModel @Inject constructor(
 
     fun updateDatabase(data: List<PasswordModel>): Job = launchCatching(
             executionContext = coroutineContextProvider.io + NonCancellable,
-            action = { dataManager.allPasswordEntities = data.map { modelToEntity(it) } }
+            action = {
+                dataManager.allPasswordEntities = data.map { modelToEntity(it) }.toMutableList()
+            }
     )
 
     fun getData(response: (List<PasswordModel>) -> Unit): Job = launchCatching(
+            executionContext = coroutineContextProvider.io + NonCancellable,
             action = { dataManager.allPasswordEntities.map { entityToModel(it) } },
-            onSuccess = { response(it) },
-            onFailure = { it.printStackTrace() }
+            onSuccess = { response(it) }
     )
 }

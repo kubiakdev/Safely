@@ -13,10 +13,10 @@ open class BaseViewModel(
 
     override val coroutineContext = Dispatchers.Main + parentJob
 
-    override fun onCleared() {
-        super.onCleared()
-        parentJob.cancel()
-    }
+//    override fun onCleared() {
+//        super.onCleared()
+//        parentJob.cancel()
+//    }
 
     protected fun <T> launchCatching(
             executionContext: CoroutineContext = coroutineContextProvider.io,

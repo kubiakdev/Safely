@@ -2,13 +2,12 @@ package com.kubiakdev.safely.util.extension
 
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
-import com.kubiakdev.safely.base.BaseViewModel
 
-inline fun <reified T : BaseViewModel> Fragment.getViewModel(
+inline fun <reified T : ViewModel> Fragment.getViewModel(
         viewModelFactory: ViewModelProvider.Factory
 ): T = ViewModelProviders.of(this, viewModelFactory)[T::class.java]
 
-inline fun <reified T : BaseViewModel> withViewModel(
+inline fun <reified T : ViewModel> withViewModel(
         viewModel: T, body: T.() -> Unit
 ): T = viewModel.apply { body() }
 

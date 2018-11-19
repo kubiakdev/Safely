@@ -1,9 +1,9 @@
 package com.kubiakdev.safely.ui.password
 
+import android.view.MenuItem
 import androidx.core.content.ContextCompat
 import androidx.core.view.get
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,11 +12,12 @@ import com.google.android.material.bottomappbar.BottomAppBar
 import com.kubiakdev.safely.R
 import com.kubiakdev.safely.base.BaseFragment
 import com.kubiakdev.safely.base.adapter.SimpleItemTouchHelperCallback
+import com.kubiakdev.safely.data.db.entity.PasswordEntity
 import com.kubiakdev.safely.data.model.DetailModel
+import com.kubiakdev.safely.ui.detail.DetailViewModel
 import com.kubiakdev.safely.ui.password.adapter.AdapterListener
 import com.kubiakdev.safely.ui.password.adapter.PasswordAdapter
 import com.kubiakdev.safely.util.Const
-import com.kubiakdev.safely.util.delegate.DefaultArgumentsDelegate
 import com.kubiakdev.safely.util.extension.getViewModel
 import com.kubiakdev.safely.util.extension.observe
 import com.kubiakdev.safely.util.extension.showKeyboard
@@ -25,6 +26,7 @@ import kotlinx.android.synthetic.main.activity_frame.*
 import kotlinx.android.synthetic.main.fragment_password.*
 import org.json.JSONArray
 import org.json.JSONObject
+import java.util.*
 import javax.inject.Inject
 
 class PasswordFragment : BaseFragment(), PasswordView, AdapterListener {
@@ -34,11 +36,19 @@ class PasswordFragment : BaseFragment(), PasswordView, AdapterListener {
 
     override val layoutId: Int = R.layout.fragment_password
 
-    private val viewModel: PasswordViewModel by lazy {
+    override val menuResId: Int? = R.menu.menu_password
+
+    private var color = R.color.white
+
+    private val passwordViewModel by lazy {
         getViewModel<PasswordViewModel>(viewModelFactory)
     }
 
-    private val adapter: PasswordAdapter by lazy {
+    private val detailViewModel by lazy {
+        getViewModel<DetailViewModel>(viewModelFactory)
+    }
+
+    private val adapter by lazy {
         PasswordAdapter(list, this)
     }
 
@@ -51,15 +61,7 @@ class PasswordFragment : BaseFragment(), PasswordView, AdapterListener {
             )
     )
 
-    lateinit var itemTouchHelper: ItemTouchHelper
-
-    private var NavController.detailIconResId by DefaultArgumentsDelegate.Int(
-            Const.EXTRA_DETAIL_ICON_RES_ID
-    )
-
-    private var NavController.detailKey by DefaultArgumentsDelegate.String(
-            Const.EXTRA_DETAIL_KEY
-    )
+    private lateinit var itemTouchHelper: ItemTouchHelper
 
     private lateinit var callback: SimpleItemTouchHelperCallback
 
@@ -81,13 +83,16 @@ class PasswordFragment : BaseFragment(), PasswordView, AdapterListener {
     }
 
     override fun initComponents() {
+        setHasOptionsMenu(true)
 
-        withViewModel(viewModel) {
+        rv_password.setBackgroundResource(color)
+
+        withViewModel(passwordViewModel) {
             observe(isInDeleteMode, ::trySwitchDeleteMode)
         }
 
         callback = SimpleItemTouchHelperCallback(
-                adapter, viewModel.isInDeleteMode.value ?: false) {}
+                adapter, passwordViewModel.isInDeleteMode.value ?: false) {}
 
 
         rv_password.run {
@@ -100,10 +105,11 @@ class PasswordFragment : BaseFragment(), PasswordView, AdapterListener {
         itemTouchHelper = ItemTouchHelper(callback).also { it.attachToRecyclerView(rv_password) }
 
         findNavController().run {
-            if (detailIconResId != -1 && detailKey != "") {
-                updateAdapterList(detailIconResId, detailKey).also {
-                    detailIconResId = -1
-                    detailKey = ""
+            detailViewModel.run {
+                if (newDetailIconResId.isNotEqualDefValue() && newDetailKey.isNotEqualDefValue()) {
+                    updateAdapterList()
+                    newDetailIconResId.reset()
+                    newDetailKey.reset()
                 }
             }
         }
@@ -111,47 +117,44 @@ class PasswordFragment : BaseFragment(), PasswordView, AdapterListener {
         rv_password.showKeyboard()
     }
 
-    override fun onResume() {
-        super.onResume()
-        activity.fragmentListener = this
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.action_password_add ->
+                findNavController().navigate(R.id.action_passwordFragment_to_detailFragment)
+            R.id.action_password_save -> savePassword()
+            R.id.action_password_delete -> passwordViewModel.isInDeleteMode.run {
+                color = R.color.colorAccent
+                if (this.value != true) {
+                    value = true
+                } else {
+                    value = false
+                    activity.dismissSnackBar()
+                }
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {
         itemTouchHelper.startDrag(viewHolder)
     }
 
-    override fun doOnMenuActionClick(action: String, value: Boolean) {
-        when (action) {
-            Const.ACTION_PASSWORD_DELETE -> {
-                viewModel.isInDeleteMode.run {
-                    if (this.value != true) {
-                        postValue(true)
-                    } else {
-                        postValue(false)
-                        activity.dismissSnackBar()
-                    }
-                }
-            }
-            Const.ACTION_PASSWORD_ADD -> {
-                findNavController().navigate(R.id.action_passwordFragment_to_detailFragment)
-            }
-            Const.ACTION_PASSWORD_SAVE -> {
-                savePassword()
-            }
-        }
-    }
-
     override fun switchOffDeleteMode() {
-        viewModel.isInDeleteMode.postValue(false)
+        passwordViewModel.isInDeleteMode.postValue(false)
         switchDeleteMode(false)
     }
 
     override fun setTitleText(text: String) {
-//        password_title.text = text
+        activity.tv_frame.text = text
     }
 
-    private fun updateAdapterList(iconResId: Int, key: String) {
-        adapter.list.add(element = DetailModel(iconResId, key))
+    private fun updateAdapterList() {
+        detailViewModel.run {
+            adapter.list.add(element = DetailModel(
+                    newDetailIconResId.value ?: R.drawable.ic_image,
+                    newDetailKey.value ?: "")
+            )
+        }
         rv_password.adapter?.notifyDataSetChanged()
     }
 
@@ -179,9 +182,25 @@ class PasswordFragment : BaseFragment(), PasswordView, AdapterListener {
     }
 
     private fun savePassword() {
-        val array = JSONArray()
-        adapter.list.forEach {
-            array.put(JSONObject().apply { put(Const.PASSWORD_JSON_OBJECT, it) })
+        adapter.list.run {
+            val entity = PasswordEntity(
+                    this[0].value,
+                    getHoldersInString(),
+                    Date(),
+                    Date(),
+                    false,
+                    (R.color.colorAccent).toString(),
+                    ""
+            )
+            passwordViewModel.addPassword(entity) {
+                findNavController().popBackStack()
+            }
         }
     }
+
+    private fun getHoldersInString(): String = JSONArray().apply {
+        adapter.list.forEach {
+            put(JSONObject().apply { put(Const.PASSWORD_JSON_OBJECT, it) })
+        }
+    }.toString()
 }

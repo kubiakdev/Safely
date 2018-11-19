@@ -12,7 +12,7 @@ class DbManager : DataManager {
 
     override val boxStore: BoxStore = BoxStore.getDefault()
 
-    override var allDetailEntities: List<DetailEntity> =
+    override var allDetailEntities: MutableList<DetailEntity> =
             BoxStore.getDefault().boxFor(DetailEntity::class.java).all
         set(collection) {
             BoxStore.getDefault().boxFor(DetailEntity::class.java).run {
@@ -21,7 +21,7 @@ class DbManager : DataManager {
             }
         }
 
-    override var allPasswordEntities: List<PasswordEntity> =
+    override var allPasswordEntities: MutableList<PasswordEntity> =
             BoxStore.getDefault().boxFor(PasswordEntity::class.java).all
         set(collection) {
             BoxStore.getDefault().boxFor(PasswordEntity::class.java).run {
@@ -45,9 +45,8 @@ class DbManager : DataManager {
         BoxStore.getDefault().boxFor(CipherEntity::class.java).put(entity)
     }
 
-    override fun add(entity: PasswordEntity): Observable<Long> = Observable.fromCallable {
+    override fun add(entity: PasswordEntity) =
         BoxStore.getDefault().boxFor(PasswordEntity::class.java).put(entity)
-    }
 
     override fun getPasswordEntity(entity: PasswordEntity): Observable<PasswordEntity> =
             Observable.fromCallable {

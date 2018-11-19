@@ -39,9 +39,18 @@
             android:id="@+id/action_templateFragment_to_iconFragment"
             app:destination="@id/iconFragment"
             app:enterAnim="@anim/nav_default_enter_anim" />
+        <argument
+            android:name="iconResId"
+            android:defaultValue="-1"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/iconFragment"
         android:name="com.kubiakdev.safely.ui.icon.IconFragment"
-        android:label="Icons" />
+        android:label="Icons">
+        <argument
+            android:name="iconResId"
+            android:defaultValue="-1"
+            app:argType="integer" />
+    </fragment>
 </navigation>

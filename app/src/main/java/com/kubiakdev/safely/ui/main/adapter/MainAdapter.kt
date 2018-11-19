@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageButton
+import androidx.core.content.ContextCompat
 import com.kubiakdev.safely.R
 import com.kubiakdev.safely.base.adapter.BaseAdapter
 import com.kubiakdev.safely.base.adapter.OnStartDragListener
@@ -46,7 +47,9 @@ class MainAdapter(
 
         override fun bindHolder(model: PasswordModel, dragListener: OnStartDragListener) {
             view.run {
-                mcv_password_item.setCardBackgroundColor(model.cardColor.toInt())
+                mcv_password_item.setCardBackgroundColor(
+                        ContextCompat.getColor(context, model.cardColor.toInt())
+                )
                 tv_password_item.text = model.title
                 setFavouriteDrawable(ib_password_item, model.isFavourite)
 

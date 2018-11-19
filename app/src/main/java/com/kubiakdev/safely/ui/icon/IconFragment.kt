@@ -1,7 +1,6 @@
 package com.kubiakdev.safely.ui.icon
 
-import android.view.View
-import androidx.navigation.NavController
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.kubiakdev.safely.R
@@ -9,26 +8,31 @@ import com.kubiakdev.safely.base.BaseFragment
 import com.kubiakdev.safely.ui.icon.adapter.AdapterListener
 import com.kubiakdev.safely.ui.icon.adapter.IconAdapter
 import com.kubiakdev.safely.util.Const
-import com.kubiakdev.safely.util.delegate.DefaultArgumentsDelegate
+import com.kubiakdev.safely.util.extension.getViewModel
 import kotlinx.android.synthetic.main.activity_frame.*
 import kotlinx.android.synthetic.main.fragment_icon.*
+import javax.inject.Inject
 
 class IconFragment : BaseFragment(), IconView, AdapterListener {
 
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
     override val layoutId: Int = R.layout.fragment_icon
 
-    private var NavController.argIconResId by DefaultArgumentsDelegate.Int(
-            Const.EXTRA_TEMPLATE_ICON_RES_ID
-    )
+    override val menuResId: Int? = null
 
     private val adapter: IconAdapter by lazy {
         IconAdapter(Const.DEFAULT_ICON_LIST, this)
                 .apply { adapterListener = this@IconFragment }
     }
 
+    private val iconViewModel by lazy {
+        getViewModel<IconViewModel>(viewModelFactory)
+    }
+
     override fun initActivityComponents() {
         activity.run {
-            bar_frame?.visibility = View.GONE
             fab_frame?.setOnClickListener {
                 findNavController().popBackStack()
             }
@@ -38,7 +42,7 @@ class IconFragment : BaseFragment(), IconView, AdapterListener {
 
     override fun initComponents() {
         rv_icon.run {
-            layoutManager = StaggeredGridLayoutManager(5, 1)
+            layoutManager = StaggeredGridLayoutManager(3, 1)
             adapter = this@IconFragment.adapter.apply {
                 adapterListener = this@IconFragment
             }.also { it.notifyDataSetChanged() }
@@ -46,9 +50,7 @@ class IconFragment : BaseFragment(), IconView, AdapterListener {
     }
 
     override fun onIconClicked(iconResId: Int) {
-        findNavController().run {
-            argIconResId = iconResId
-            popBackStack()
-        }
+        iconViewModel.iconResId.value = iconResId
+        findNavController().popBackStack()
     }
 }

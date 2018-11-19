@@ -25,7 +25,9 @@ class MainFragment : BaseFragment(), MainView, AdapterListener {
 
     override val layoutId: Int = R.layout.fragment_main
 
-    private val viewModel: MainViewModel by lazy {
+    override val menuResId: Int? = R.menu.menu_main
+
+    private val mainViewModel by lazy {
         getViewModel<MainViewModel>(viewModelFactory)
     }
 
@@ -54,14 +56,14 @@ class MainFragment : BaseFragment(), MainView, AdapterListener {
     }
 
     override fun initComponents() {
-        withViewModel(viewModel) {
+        withViewModel(mainViewModel) {
 
         }
 
         adapter = MainAdapter(mutableListOf(), this)
                 .apply { adapterListener = this@MainFragment }
                 .also {
-                    viewModel.getData { list ->
+                    mainViewModel.getData { list ->
                         adapter.list = list.toMutableList()
                         dataList = list.toMutableList()
                         activity.hideProgressBar()
@@ -71,7 +73,9 @@ class MainFragment : BaseFragment(), MainView, AdapterListener {
                 }
 
 
-        callback = SimpleItemTouchHelperCallback(adapter) { viewModel.updateDatabase(adapter.list) }
+        callback = SimpleItemTouchHelperCallback(adapter) {
+            mainViewModel.updateDatabase(adapter.list)
+        }
 
         itemTouchHelper = ItemTouchHelper(callback).also { it.attachToRecyclerView(rv_main) }
 

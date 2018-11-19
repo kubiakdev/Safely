@@ -1,15 +1,15 @@
 package com.kubiakdev.safely.ui.template
 
-import android.text.Editable
+import android.view.MenuItem
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.kubiakdev.safely.R
 import com.kubiakdev.safely.base.BaseFragment
 import com.kubiakdev.safely.data.model.TemplateModel
-import com.kubiakdev.safely.util.Const
-import com.kubiakdev.safely.util.delegate.DefaultArgumentsDelegate
+import com.kubiakdev.safely.ui.detail.DetailViewModel
+import com.kubiakdev.safely.ui.icon.IconViewModel
 import com.kubiakdev.safely.util.extension.getViewModel
+import com.kubiakdev.safely.util.extension.toEditable
 import kotlinx.android.synthetic.main.activity_frame.*
 import kotlinx.android.synthetic.main.fragment_template.*
 import javax.inject.Inject
@@ -21,32 +21,19 @@ class TemplateFragment : BaseFragment(), TemplateView {
 
     override val layoutId: Int = R.layout.fragment_template
 
-    private val viewModel: TemplateViewModel by lazy {
+    override val menuResId: Int? = R.menu.menu_template
+
+    private val templateViewModel by lazy {
         getViewModel<TemplateViewModel>(viewModelFactory)
     }
 
-    private var NavController.templateIconResId by DefaultArgumentsDelegate.Int(
-            Const.EXTRA_TEMPLATE_ICON_RES_ID
-    )
+    private val iconViewModel by lazy {
+        getViewModel<IconViewModel>(viewModelFactory)
+    }
 
-    private var NavController.templateKey by DefaultArgumentsDelegate.String(
-            Const.EXTRA_TEMPLATE_KEY
-    )
-
-    private var NavController.detailIconResId by DefaultArgumentsDelegate.Int(
-            Const.EXTRA_DETAIL_ICON_RES_ID
-    )
-
-    private var NavController.detailKey by DefaultArgumentsDelegate.String(
-            Const.EXTRA_DETAIL_KEY
-    )
-
-    private var NavController.detailEditedItemIndex by DefaultArgumentsDelegate.Int(
-            Const.EXTRA_DETAIL_EDITED_ITEM_INDEX
-    )
-
-    private var cachedIconResId: Int? = null
-    private var cachedKey: String? = null
+    private val detailViewModel by lazy {
+        getViewModel<DetailViewModel>(viewModelFactory)
+    }
 
     override fun initComponents() {
         activity.bar_frame?.replaceMenu(R.menu.menu_template)
@@ -56,34 +43,36 @@ class TemplateFragment : BaseFragment(), TemplateView {
         }
 
         findNavController().run {
-            if (templateIconResId != -1 && templateKey != "") {
-                ib_template_icon.run {
-                    setImageResource(templateIconResId)
-                    contentDescription = templateIconResId.toString()
+            iconViewModel.iconResId.run {
+                if (isNotEqualDefValue()) {
+                    ib_template_icon.run {
+                        setImageResource(value ?: R.drawable.ic_image)
+                        contentDescription = value.toString()
+                    }
+                    reset()
+                    return
                 }
-                et_template_key.text = Editable.Factory.getInstance().newEditable(templateKey)
-                cachedIconResId = templateIconResId
-                cachedKey = templateKey
-            } else {
-                if (templateIconResId == -1) {
-                    templateIconResId = R.drawable.ic_image
+            }
+
+            detailViewModel.run {
+                if (editedDetailIconResId.isEqualDefValue()) {
+                    editedDetailIconResId.value = R.drawable.ic_image
                 }
+                et_template_key.text =
+                        toEditable(detailViewModel.editedDetailKey.value ?: "")
                 ib_template_icon.run {
-                    setImageResource(templateIconResId)
-                    contentDescription = templateIconResId.toString()
+                    setImageResource(editedDetailIconResId.value ?: R.drawable.ic_image)
+                    contentDescription = editedDetailIconResId.value.toString()
                 }
             }
         }
     }
 
-    override fun doOnMenuActionClick(action: String, value: Boolean) {
-        when (action) {
-            Const.ACTION_TEMPLATE_SAVE -> {
-                onTemplateSave()
-            }
-            Const.ACTION_PASSWORD_DELETE -> {
-            }
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.action_template_save -> onTemplateSave()
         }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun onTemplateSave() {
@@ -93,26 +82,28 @@ class TemplateFragment : BaseFragment(), TemplateView {
             } else {
                 val currentIconResId = ib_template_icon.contentDescription.toString().toInt()
                 val currentKey = text.toString()
-                if ((cachedIconResId != null && cachedKey != null)
-                        && (currentIconResId != cachedIconResId || currentKey != cachedKey)) {
-                    viewModel.editTemplateAndBack(
-                            TemplateModel(currentIconResId, currentKey),
-                            findNavController().detailEditedItemIndex
-                    ) {
-                        findNavController().popBackStack()
+                detailViewModel.run {
+                    if (editedDetailIndex.isNotEqualDefValue()) {
+                        templateViewModel.editTemplateAndPopBackStack(
+                                TemplateModel(currentIconResId, currentKey),
+                                editedDetailIndex.value ?: -1
+                        ) {
+                            editedDetailIndex.reset()
+                            editedDetailIconResId.reset()
+                            editedDetailKey.reset()
+                            findNavController().popBackStack()
+                        }
+                    } else {
+                        templateViewModel.addTemplateAndPopBackStack(
+                                TemplateModel(currentIconResId, currentKey)
+                        ) {
+                            templateViewModel.newTemplateIconResId.reset()
+                            templateViewModel.newTemplateKey.reset()
+                            findNavController().popBackStack()
+                        }
                     }
-                } else {
-                    addTemplateAndBack(TemplateModel(currentIconResId, currentKey))
                 }
             }
-        }
-    }
-
-    private fun addTemplateAndBack(model: TemplateModel) {
-        findNavController().run {
-            detailIconResId = model.iconResId
-            detailKey = model.key
-            popBackStack()
         }
     }
 }

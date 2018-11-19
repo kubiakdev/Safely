@@ -41,7 +41,7 @@ data class DetailModel(var iconResId: Int, var key: String) : Model {
     }
 
     override fun toString(): String =
-            "DetailModel(id=$id, iconResId=$iconResId, key='$key', value='$value', isShown=$isShown)"
+            "DetailModel(id=$id, chosenIconResId=$iconResId, key='$key', value='$value', isShown=$isShown)"
 
 
 }

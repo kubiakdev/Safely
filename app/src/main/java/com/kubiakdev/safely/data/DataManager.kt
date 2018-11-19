@@ -11,9 +11,9 @@ interface DataManager {
 
     val boxStore: BoxStore
 
-    var allDetailEntities: List<DetailEntity>
+    var allDetailEntities: MutableList<DetailEntity>
 
-    var allPasswordEntities: List<PasswordEntity>
+    var allPasswordEntities: MutableList<PasswordEntity>
 
     val cipherBox: Observable<Box<CipherEntity>>
 
@@ -23,7 +23,7 @@ interface DataManager {
 
     fun add(entity: CipherEntity): Observable<Long>
 
-    fun add(entity: PasswordEntity): Observable<Long>
+    fun add(entity: PasswordEntity): Long
 
     fun getPasswordEntity(entity: PasswordEntity): Observable<PasswordEntity>
 

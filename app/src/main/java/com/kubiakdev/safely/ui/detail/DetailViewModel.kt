@@ -7,6 +7,7 @@ import com.kubiakdev.safely.data.mapper.entityToModel
 import com.kubiakdev.safely.data.mapper.modelToEntity
 import com.kubiakdev.safely.data.model.DetailModel
 import com.kubiakdev.safely.util.Const
+import com.kubiakdev.safely.util.livedata.ResettableMutableLiveData
 import com.kubiakdev.safely.util.provider.CoroutineContextProvider
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable
@@ -20,6 +21,13 @@ class DetailViewModel @Inject constructor(
     var isInDeleteMode = MutableLiveData<Boolean>()
     var isInEditMode = MutableLiveData<Boolean>()
 
+    var newDetailIconResId = ResettableMutableLiveData(-1)
+    var newDetailKey = ResettableMutableLiveData("")
+
+    var editedDetailIndex = ResettableMutableLiveData(-1)
+    var editedDetailIconResId = ResettableMutableLiveData(-1)
+    var editedDetailKey = ResettableMutableLiveData("")
+
     init {
         isInDeleteMode.postValue(false)
         isInEditMode.postValue(false)
@@ -27,70 +35,25 @@ class DetailViewModel @Inject constructor(
 
     fun updateDatabase(data: List<DetailModel>): Job = launchCatching(
             executionContext = coroutineContextProvider.io + NonCancellable,
-            action = { dataManager.allDetailEntities = data.map { modelToEntity(it) } }
+            action = {
+                dataManager.allDetailEntities = data.map { modelToEntity(it) }.toMutableList()
+            }
     )
 
     fun getData(response: (List<DetailModel>) -> Unit): Job = launchCatching(
-            action = { dataManager.allDetailEntities.map { entityToModel(it) } },
+            executionContext = coroutineContextProvider.io + NonCancellable,
+            action = {
+                dataManager.allDetailEntities.map { entityToModel(it) }
+            },
             onSuccess = {
                 if (it.isNotEmpty()) {
                     response(it)
                 } else {
                     Const.DEFAULT_TEMPLATE_LIST.run {
-                        response(this)
                         updateDatabase(this)
+                        response(this)
                     }
                 }
-            },
-            onFailure = { it.printStackTrace() }
+            }
     )
 }
-
-//    lateinit var dataManager: DataManager
-
-//    fun getData() =
-//            executeAsyncSeq(
-//                    context = UI + parentJob,
-//                    doOnError = { e ->
-//                        ExceptionHandler(
-//                                exception = e,
-//                                onNetworkErrorException = { println(" dziala") }
-//                        )
-//                    },
-//                    block = {
-//                        dataManager.getAllDetailEntities().map { entityToModel(it) }.also {
-//                            println("testt ${Thread.currentThread().name}")
-//                        }
-//                    },
-//                    response = { list ->
-//                        //                        view?.tryUpdateAdapterList(
-////                                if (list.isEmpty()) {
-////                                    Const.DEFAULT_TEMPLATE_LIST
-////                                } else {
-////                                    list
-////                                }
-////                        ).also { println("testt2 ${Thread.currentThread().name}") }
-//                        throw NetworkErrorException()
-//                    }
-//            )
-
-//    var modelList : List<DetailModel> = executeAsyncSeq(
-////            context =  Contacts.Intents.UI + parentJob,
-//            context = parentJob,
-//            executors = *arrayOf(object : CoroutineExecutor<Any> {
-//
-//                override fun doOnBlock(): List<DetailModel> =
-//                //                        dataManager.getAllDetailEntities().map { entityToModel(it) }
-//                        listOf(DetailModel(2, "53"))
-//
-//                override fun doOnResponse(block: Any) {
-//                    //                    view?.tryUpdateAdapterList(
-//                    //                            if (block.isEmpty()) {
-//                    //                                Const.DEFAULT_TEMPLATE_LIST
-//                    //                            } else {
-//                    //                                block
-//                    //                            })
-//                    //                    println("dupppaaa")
-//                }
-//            })
-//    )

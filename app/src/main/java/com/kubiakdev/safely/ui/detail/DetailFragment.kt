@@ -1,9 +1,9 @@
 package com.kubiakdev.safely.ui.detail
 
+import android.view.MenuItem
 import androidx.core.content.ContextCompat
 import androidx.core.view.get
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -14,8 +14,7 @@ import com.kubiakdev.safely.base.adapter.SimpleItemTouchHelperCallback
 import com.kubiakdev.safely.data.model.DetailModel
 import com.kubiakdev.safely.ui.detail.adapter.AdapterListener
 import com.kubiakdev.safely.ui.detail.adapter.DetailAdapter
-import com.kubiakdev.safely.util.Const
-import com.kubiakdev.safely.util.delegate.DefaultArgumentsDelegate
+import com.kubiakdev.safely.ui.template.TemplateViewModel
 import com.kubiakdev.safely.util.extension.getViewModel
 import com.kubiakdev.safely.util.extension.observe
 import com.kubiakdev.safely.util.extension.withViewModel
@@ -30,31 +29,17 @@ class DetailFragment : BaseFragment(), DetailView, AdapterListener {
 
     override val layoutId: Int = R.layout.fragment_detail
 
+    override var menuResId: Int? = R.menu.menu_detail
+
     override var isInEditMode: Boolean? = null
 
-    private val viewModel: DetailViewModel by lazy {
+    private val detailViewModel by lazy {
         getViewModel<DetailViewModel>(viewModelFactory)
     }
 
-    private var NavController.detailIconResId by DefaultArgumentsDelegate.Int(
-            Const.EXTRA_DETAIL_ICON_RES_ID
-    )
-
-    private var NavController.detailKey by DefaultArgumentsDelegate.String(
-            Const.EXTRA_DETAIL_KEY
-    )
-
-    private var NavController.templateIconResId by DefaultArgumentsDelegate.Int(
-            Const.EXTRA_TEMPLATE_ICON_RES_ID
-    )
-
-    private var NavController.templateKey by DefaultArgumentsDelegate.String(
-            Const.EXTRA_TEMPLATE_KEY
-    )
-
-    private var NavController.detailEditedItemIndex by DefaultArgumentsDelegate.Int(
-            Const.EXTRA_DETAIL_EDITED_ITEM_INDEX
-    )
+    private val templateViewModel by lazy {
+        getViewModel<TemplateViewModel>(viewModelFactory)
+    }
 
     private lateinit var callback: SimpleItemTouchHelperCallback
 
@@ -72,7 +57,7 @@ class DetailFragment : BaseFragment(), DetailView, AdapterListener {
     }
 
     override fun initComponents() {
-        withViewModel(viewModel) {
+        withViewModel(detailViewModel) {
             observe(isInDeleteMode, ::trySwitchDeleteMode)
             observe(isInEditMode, ::trySwitchEditMode)
         }
@@ -80,7 +65,7 @@ class DetailFragment : BaseFragment(), DetailView, AdapterListener {
         adapter = DetailAdapter(mutableListOf(), this, false)
                 .apply { adapterListener = this@DetailFragment }
                 .also {
-                    viewModel.getData { list ->
+                    detailViewModel.getData { list ->
                         adapter.list = list.toMutableList()
                         dataList = list.toMutableList()
                         activity.hideProgressBar()
@@ -94,7 +79,7 @@ class DetailFragment : BaseFragment(), DetailView, AdapterListener {
                 adapter,
                 getViewModel<DetailViewModel>(viewModelFactory).isInDeleteMode.value
                         ?: false
-        ) { viewModel.updateDatabase(adapter.list) }
+        ) { detailViewModel.updateDatabase(adapter.list) }
 
         itemTouchHelper = ItemTouchHelper(callback).also { it.attachToRecyclerView(rv_detail) }
 
@@ -105,35 +90,26 @@ class DetailFragment : BaseFragment(), DetailView, AdapterListener {
             }.also { it.notifyDataSetChanged() }
         }
 
-        isInEditMode = viewModel.isInDeleteMode.value ?: false
+        isInEditMode = detailViewModel.isInDeleteMode.value ?: false
 
         findNavController().run {
-            if (detailIconResId != -1 && detailKey != "") {
-                updateAdapterList(this)
-                detailIconResId = -1
-                detailKey = ""
+            templateViewModel.run {
+                if (newTemplateIconResId.isNotEqualDefValue() &&
+                        newTemplateKey.isNotEqualDefValue()) {
+                    updateAdapterList()
+                    newTemplateIconResId.reset()
+                    newTemplateKey.reset()
+                }
             }
         }
     }
 
-
-    override fun doOnMenuActionClick(action: String, value: Boolean) {
-        when (action) {
-            Const.ACTION_DETAIL_ADD -> {
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.action_detail_add -> {
                 findNavController().navigate(R.id.action_detailFragment_to_templateFragment)
             }
-            Const.ACTION_DETAIL_DELETE -> {
-                getViewModel<DetailViewModel>(viewModelFactory).run {
-                    if (isInDeleteMode.value != true) {
-                        isInDeleteMode.postValue(true)
-                        isInEditMode.postValue(false)
-                    } else {
-                        isInDeleteMode.postValue(false)
-                        activity.dismissSnackBar()
-                    }
-                }
-            }
-            Const.ACTION_DETAIL_EDIT -> {
+            R.id.action_detail_edit -> {
                 getViewModel<DetailViewModel>(viewModelFactory).run {
                     if (isInEditMode.value != true) {
                         isInEditMode.postValue(true)
@@ -146,7 +122,19 @@ class DetailFragment : BaseFragment(), DetailView, AdapterListener {
                 }
                 isInEditMode = !(isInEditMode ?: true)
             }
+            R.id.action_detail_delete -> {
+                getViewModel<DetailViewModel>(viewModelFactory).run {
+                    if (isInDeleteMode.value != true) {
+                        isInDeleteMode.postValue(true)
+                        isInEditMode.postValue(false)
+                    } else {
+                        isInDeleteMode.postValue(false)
+                        activity.dismissSnackBar()
+                    }
+                }
+            }
         }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {
@@ -164,9 +152,9 @@ class DetailFragment : BaseFragment(), DetailView, AdapterListener {
 
     override fun addDetail(model: DetailModel) {
         findNavController().run {
-            graph.defaultArguments.apply {
-                putInt(Const.EXTRA_DETAIL_ICON_RES_ID, model.iconResId)
-                putString(Const.EXTRA_DETAIL_KEY, model.key)
+            detailViewModel.run {
+                newDetailIconResId.value = model.iconResId
+                newDetailKey.value = model.key
             }
             popBackStack()
         }
@@ -177,9 +165,11 @@ class DetailFragment : BaseFragment(), DetailView, AdapterListener {
 
     override fun onEditTemplate(currentModel: DetailModel, index: Int) {
         findNavController().run {
-            templateIconResId = currentModel.iconResId
-            templateKey = currentModel.key
-            detailEditedItemIndex = index
+            detailViewModel.run {
+                editedDetailIndex.value = index
+                editedDetailIconResId.value = currentModel.iconResId
+                editedDetailKey.value = currentModel.key
+            }
             navigate(R.id.action_detailFragment_to_templateFragment)
         }
     }
@@ -194,10 +184,13 @@ class DetailFragment : BaseFragment(), DetailView, AdapterListener {
         switchEditMode(false)
     }
 
-    private fun updateAdapterList(navController: NavController) {
-        val newModel = DetailModel(navController.detailIconResId, navController.detailKey)
+    private fun updateAdapterList() {
+        val newModel = DetailModel(
+                templateViewModel.newTemplateIconResId.value ?: R.drawable.ic_image,
+                templateViewModel.newTemplateKey.value ?: ""
+        )
         adapter.list.add(newModel)
-        viewModel.updateDatabase(adapter.list)
+        detailViewModel.updateDatabase(adapter.list)
     }
 
     private fun trySwitchEditMode(shouldLaunchEditMode: Boolean?) {
@@ -224,26 +217,22 @@ class DetailFragment : BaseFragment(), DetailView, AdapterListener {
     }
 
     private fun setMenuDeleteIcon(isInDeleteMode: Boolean) {
-        activity.run {
-            menu?.get(0)?.icon = if (isInDeleteMode) {
-                ContextCompat.getDrawable(this, R.drawable.ic_delete_on).also {
-                    showSnackBar(R.string.all_delete_on)
-                }
-            } else {
-                ContextCompat.getDrawable(this, R.drawable.ic_delete_off)
+        menu?.get(0)?.icon = if (isInDeleteMode) {
+            ContextCompat.getDrawable(requireContext(), R.drawable.ic_delete_on).also {
+                showSnackBar(R.string.all_delete_on)
             }
+        } else {
+            ContextCompat.getDrawable(requireContext(), R.drawable.ic_delete_off)
         }
     }
 
     private fun setMenuEditIcon(isInEditMode: Boolean) {
-        activity.run {
-            menu?.get(1)?.icon = if (isInEditMode) {
-                ContextCompat.getDrawable(this, R.drawable.ic_edit_on).also {
-                    showSnackBar(R.string.all_edit_on)
-                }
-            } else {
-                ContextCompat.getDrawable(this, R.drawable.ic_edit_off)
+        menu?.get(1)?.icon = if (isInEditMode) {
+            ContextCompat.getDrawable(requireContext(), R.drawable.ic_edit_on).also {
+                showSnackBar(R.string.all_edit_on)
             }
+        } else {
+            ContextCompat.getDrawable(requireContext(), R.drawable.ic_edit_off)
         }
     }
 }

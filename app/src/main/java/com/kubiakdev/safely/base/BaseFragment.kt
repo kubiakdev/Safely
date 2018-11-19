@@ -1,9 +1,7 @@
 package com.kubiakdev.safely.base
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.annotation.StringRes
 import androidx.recyclerview.widget.RecyclerView
 import com.kubiakdev.safely.R
@@ -15,12 +13,15 @@ import kotlinx.android.synthetic.main.activity_frame.*
 abstract class BaseFragment :
         DaggerFragment(),
         BaseView,
-        FragmentListener,
         OnStartDragListener {
 
-    abstract val layoutId: Int
-
     protected val activity by lazy { this.getActivity() as FrameActivity }
+
+    protected abstract val layoutId: Int
+
+    protected abstract val menuResId: Int?
+
+    protected var menu: Menu? = null
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -32,10 +33,9 @@ abstract class BaseFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        activity.fragmentListener = this
+        setHasOptionsMenu(menuResId != null)
         initActivityComponents()
         initComponents()
-
     }
 
     protected open fun inflateView(
@@ -44,10 +44,18 @@ abstract class BaseFragment :
             savedInstanceState: Bundle?
     ): View = inflater.inflate(layoutId, container, false)
 
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        menuResId?.run {
+            hideFullFragment()
+            activity.menuInflater.inflate(this, menu)
+            this@BaseFragment.menu = menu
+            return super.onCreateOptionsMenu(menu, inflater)
+        }
+        showFullFragment()
+        super.onCreateOptionsMenu(menu, inflater)
+    }
 
     override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {}
-
-    override fun doOnMenuActionClick(action: String, value: Boolean) {}
 
     protected open fun initActivityComponents() {}
 
