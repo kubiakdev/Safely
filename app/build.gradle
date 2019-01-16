@@ -47,7 +47,6 @@ android {
 
 ext {
 
-    adapterDelegates_version = '4.0.0'
     appCompat_version = '1.0.2'
     constraintLayout_version = '1.1.3'
     coroutines_version = '1.0.0-RC1'
@@ -56,17 +55,11 @@ ext {
     easyPrefs_version = '1.9.0'
     espresso_version = '3.1.0-alpha4'
     junit_version = '4.12'
-    leakCanary_version = '1.5.4'
     lifecycle_version = '1.1.1'
     material_version = '1.1.0-alpha02'
     materialDialog_version = '2.0.0-rc5'
     navigation_version = '1.0.0-alpha09'
-    patternLock_version = '1.0.0'
-    pinLock_version = '2.1.0'
     runner_version = '1.1.0-alpha4'
-    rxAndroid_version = '2.1.0'
-    rxKotlin_version = '2.2.0'
-    rxLifecycle_version = '2.2.1'
 
 }
 
@@ -78,9 +71,6 @@ dependencies {
     testImplementation "junit:junit:$junit_version"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
     androidTestImplementation "androidx.test:runner:$runner_version"
-
-    //AdapterDelegate
-    implementation "com.hannesdorfmann:adapterdelegates4:$adapterDelegates_version"
 
     //AppCompat
     implementation "androidx.appcompat:appcompat:$appCompat_version"
@@ -101,10 +91,6 @@ dependencies {
     //EasyPrefs
     implementation "com.pixplicity.easyprefs:library:$easyPrefs_version"
 
-    //LeakCanary
-    debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakCanary_version"
-    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanary_version"
-
     //Lifecycle
     implementation "android.arch.lifecycle:extensions:$lifecycle_version"
     annotationProcessor "android.arch.lifecycle:compiler:$lifecycle_version"
@@ -120,21 +106,5 @@ dependencies {
     implementation "android.arch.navigation:navigation-ui:$navigation_version"
     implementation "android.arch.navigation:navigation-fragment-ktx:$navigation_version"
     implementation "android.arch.navigation:navigation-ui-ktx:$navigation_version"
-
-    //PatternLock
-    implementation "com.andrognito.patternlockview:patternlockview-reactive:$patternLock_version"
-
-    //PinLock
-    implementation "com.andrognito.pinlockview:pinlockview:$pinLock_version"
-
-    //RxAndroid
-    implementation "io.reactivex.rxjava2:rxandroid:$rxAndroid_version"
-
-    //RxKotlin2
-    implementation "io.reactivex.rxjava2:rxkotlin:$rxKotlin_version"
-
-    //RxLifecycle
-    implementation "com.trello.rxlifecycle2:rxlifecycle:$rxLifecycle_version"
-    implementation "com.trello.rxlifecycle2:rxlifecycle-components:$rxLifecycle_version"
 
 }
