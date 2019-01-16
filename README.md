@@ -1,8 +1,8 @@
 # Safely
 
-Safely is a simple app for saving our notes or passwords.The main concept of the app is to develop myself by testing various libraries and architectures.
+Safely is a simple app for saving our notes or passwords.The main purpose why i wrote this app is to develop myself by testing various libraries and architectures.
 
-The app is made with "single activity - multiple fragments" concept preferred by Google and my way to share the data using SharedViewModel class.
+The app is made with "single activity - multiple fragments" concept preferred by Google.
 
 
 <p align="center">
