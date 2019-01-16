@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="4dp"
+    android:backgroundTint="?attr/cardViewColor"
+    app:cardCornerRadius="0dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/ivDetailItemIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_gravity="center"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="43dp"
+            android:layout_marginRight="8dp"
+            android:contentDescription="@null"
+            app:srcCompat="@drawable/ic_image" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilDetailItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_toStartOf="@id/ivDetailItemCopy"
+            android:layout_toEndOf="@id/ivDetailItemIcon"
+            android:background="?attr/cardViewColor"
+            android:textColorHint="?attr/textColorSecondary"
+            app:helperTextTextColor="@color/accent"
+            app:hintTextColor="?attr/textColorSecondary"
+            app:passwordToggleDrawable="@drawable/selector_password_visibility"
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="?attr/iconColor">
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/etDetailItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="@null"
+                android:ellipsize="end"
+                android:inputType="textPassword"
+                android:scrollHorizontally="false"
+                android:singleLine="false"
+                android:textColor="?attr/textColorSecondary"
+                android:textSize="21sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <ImageView
+            android:id="@+id/ivDetailItemCopy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="43dp"
+            android:layout_marginEnd="8dp"
+            android:contentDescription="@null"
+            app:srcCompat="@drawable/ic_copy" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginStart="43dp"
+            android:layout_marginTop="77dp"
+            android:layout_marginEnd="10dp"
+            android:background="?attr/colorAccent" />
+
+    </RelativeLayout>
+
+</com.google.android.material.card.MaterialCardView>

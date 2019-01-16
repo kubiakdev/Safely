@@ -1,3 +1,38 @@
 <resources>
     <string name="app_name">Safely</string>
+
+    <string name="all_delete_mode_on">Delete mode on</string>
+    <string name="all_edit_mode_on">Edit mode on</string>
+    <string name="all_no">No</string>
+    <string name="all_placeholder_res">R.drawable.ic_image</string>
+    <string name="all_placeholder_res_id">2131165300</string>
+    <string name="all_value_copied">Value copied</string>
+    <string name="all_yes">Yes</string>
+
+    <string name="detail_menu_add">Add</string>
+    <string name="detail_menu_edit">Edit</string>
+    <string name="detail_menu_delete">Delete</string>
+    <string name="detail_title">Add detail</string>
+
+    <string name="detail_edition_hint_key">Key name</string>
+    <string name="detail_edition_icon_select">Select icon &amp; key</string>
+    <string name="detail_edition_notnull_key_required">The key cannot be empty</string>
+    <string name="detail_edition_title">Add template</string>
+
+    <string name="dialog_delete_password_question">Delete password?</string>
+
+    <string name="icon_title">Icons</string>
+
+    <string name="main_menu_delete">Delete</string>
+    <string name="main_menu_more">More</string>
+    <string name="main_title">Passwords</string>
+
+    <string name="password_menu_delete">Delete</string>
+    <string name="password_menu_save">Save</string>
+    <string name="password_menu_add">Add</string>
+    <string name="password_notnull_title_required">The title cannot be empty</string>
+    <string name="password_title_default">New password</string>
+
+    <string name="template_menu_save">Save</string>
+
 </resources>

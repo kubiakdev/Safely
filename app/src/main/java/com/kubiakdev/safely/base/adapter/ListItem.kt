@@ -1,0 +1,3 @@
+package com.kubiakdev.safely.base.adapter
+
+interface ListItem

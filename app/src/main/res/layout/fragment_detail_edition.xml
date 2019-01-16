@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/tbDetailEdition"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:paddingStart="24dp"
+        android:paddingLeft="24dp"
+        android:paddingEnd="24dp"
+        android:paddingRight="24dp"
+        app:title="@string/detail_edition_title"
+        app:titleTextAppearance="@style/ToolbarTextAppearance"
+        app:titleTextColor="?attr/textColorPrimary" />
+
+    <TextView
+        android:id="@+id/tvDetailEditionIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="?attr/actionBarSize"
+        android:layout_marginTop="28dp"
+        android:layout_marginBottom="24dp"
+        android:contentDescription="@string/all_placeholder_res"
+        android:text="@string/detail_edition_icon_select"
+        android:textColor="?attr/textColorPrimary"
+        android:textSize="14sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/ibDetailEditionIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="?attr/actionBarSize"
+            android:background="@drawable/background_rectangle_orange"
+            android:contentDescription="@string/all_placeholder_res_id"
+            app:srcCompat="@drawable/ic_image" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/etDetailEditionKey"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="21dp"
+            android:backgroundTint="?attr/textColorPrimary"
+            android:hint="@string/detail_edition_hint_key"
+            android:textColor="?attr/textColorPrimary"
+            android:textColorHint="?attr/textColorSecondary"
+            android:textSize="21sp" />
+
+    </LinearLayout>
+
+
+</LinearLayout>
