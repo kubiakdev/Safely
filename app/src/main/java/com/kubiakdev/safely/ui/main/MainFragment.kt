@@ -1,108 +1,218 @@
 package com.kubiakdev.safely.ui.main
 
-import androidx.appcompat.app.AlertDialog
+import android.view.MenuItem
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.callbacks.onDismiss
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.kubiakdev.safely.R
 import com.kubiakdev.safely.base.BaseFragment
 import com.kubiakdev.safely.base.adapter.SimpleItemTouchHelperCallback
+import com.kubiakdev.safely.data.mapper.itemToEntity
+import com.kubiakdev.safely.data.mapper.modelToItem
 import com.kubiakdev.safely.data.model.PasswordModel
-import com.kubiakdev.safely.ui.main.adapter.AdapterListener
 import com.kubiakdev.safely.ui.main.adapter.MainAdapter
+import com.kubiakdev.safely.ui.main.adapter.MainAdapterListener
+import com.kubiakdev.safely.ui.main.adapter.item.PasswordItem
+import com.kubiakdev.safely.ui.password.PasswordSharedViewModel
+import com.kubiakdev.safely.util.extension.getSharedViewModel
 import com.kubiakdev.safely.util.extension.getViewModel
-import com.kubiakdev.safely.util.extension.withViewModel
-import kotlinx.android.synthetic.main.activity_frame.*
+import com.kubiakdev.safely.util.extension.observe
+import com.kubiakdev.safely.util.extension.tint
+import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.fragment_main.*
+import java.util.*
 import javax.inject.Inject
 
-class MainFragment : BaseFragment(), MainView, AdapterListener {
+class MainFragment : BaseFragment(), MainView, MainAdapterListener {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     override val layoutId: Int = R.layout.fragment_main
 
-    override val menuResId: Int? = R.menu.menu_main
+    override val menuResId: Int = R.menu.menu_main
 
-    private val mainViewModel by lazy {
-        getViewModel<MainViewModel>(viewModelFactory)
+    override val itemTouchHelper: ItemTouchHelper by lazy {
+        ItemTouchHelper(callback).also { it.attachToRecyclerView(rvMain) }
     }
 
-    private lateinit var callback: SimpleItemTouchHelperCallback
+    private val adapter by lazy {
+        MainAdapter(mutableListOf(), this)
+                .apply { listener = this@MainFragment }
+                .also {
+                    mainViewModel.getPasswords { list ->
+                        it.list.addAll(list.map { item -> modelToItem(item) })
+                        activity.hideProgressBar()
+                        rvMain.adapter?.notifyDataSetChanged()
+                    }
+                    activity.showProgressBar()
+                }
+    }
 
-    private lateinit var adapter: MainAdapter
+    private val callback by lazy {
+        SimpleItemTouchHelperCallback(adapter, false)
+    }
 
-    private lateinit var itemTouchHelper: ItemTouchHelper
+    private val onDeleteDialog: MaterialDialog? by lazy {
+        context?.let {
+            MaterialDialog(it)
+                    .message(R.string.dialog_delete_password_question)
+                    .negativeButton(R.string.all_no, null, null)
+        }
+    }
 
-    private lateinit var dataList: MutableList<PasswordModel>
+    private lateinit var mainViewModel: MainViewModel
+    private lateinit var mainSharedViewModel: MainSharedViewModel
+    private lateinit var passwordSharedViewModel: PasswordSharedViewModel
+
+    override fun initViewModel() {
+        mainViewModel = getViewModel(viewModelFactory)
+    }
+
+    override fun initSharedViewModels() {
+        mainSharedViewModel = getSharedViewModel(viewModelFactory)
+        passwordSharedViewModel = getSharedViewModel(viewModelFactory) {
+            observe(newPasswordModel, ::addPasswordToList)
+            observe(editedPasswordModel, ::editPasswordInList)
+        }
+    }
 
     override fun initActivityComponents() {
-        activity.run {
-            bar_frame?.run {
-                replaceMenu(R.menu.menu_main)
+        activity.apply {
+            bottomAppBar?.apply {
                 setNavigationIcon(R.drawable.ic_menu)
                 fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
             }
-            fab_frame?.run {
+
+            fab?.apply {
                 setImageResource(R.drawable.ic_add)
                 setOnClickListener {
-                    findNavController().navigate(R.id.action_mainFragment_to_passwordFragment)
+                    launchPasswordFragment(null)
                 }
             }
         }
     }
 
     override fun initComponents() {
-        withViewModel(mainViewModel) {
-
-        }
-
-        adapter = MainAdapter(mutableListOf(), this)
-                .apply { adapterListener = this@MainFragment }
-                .also {
-                    mainViewModel.getData { list ->
-                        adapter.list = list.toMutableList()
-                        dataList = list.toMutableList()
-                        activity.hideProgressBar()
-                        rv_main.adapter?.notifyDataSetChanged()
-                    }
-                    activity.showProgressBar()
-                }
-
-
-        callback = SimpleItemTouchHelperCallback(adapter) {
-            mainViewModel.updateDatabase(adapter.list)
-        }
-
-        itemTouchHelper = ItemTouchHelper(callback).also { it.attachToRecyclerView(rv_main) }
-
-        rv_main.run {
-            layoutManager = StaggeredGridLayoutManager(2, 1)
+        rvMain.apply {
+            layoutManager = LinearLayoutManager(context)
             adapter = this@MainFragment.adapter.apply {
-                adapterListener = this@MainFragment
+                listener = this@MainFragment
             }.also { it.notifyDataSetChanged() }
-
         }
     }
 
-    override fun showOnDeleteDialog(position: Int) {
-        AlertDialog.Builder(rv_main.context)
-                .setMessage(R.string.delete_password_question)
-                .setPositiveButton(R.string.delete_password_yes) { _, _ ->
-                    deletePassword(position)
-                }
-                .setNegativeButton(R.string.delete_password_no) { _, _ -> }
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.action_main_delete -> setDeleteMode()
+        }
+        return super.onOptionsItemSelected(item)
     }
 
-    private fun deletePassword(position: Int) {
-        adapter.list.run {
-            removeAt(position)
-            if (isEmpty()) {
-//                switchOffDeleteMode()
-            }
-        }.also { adapter.notifyItemRemoved(position) }
+    override fun onItemClicked(position: Int) {
+        launchPasswordFragment(adapter.list[position])
     }
+
+    override fun onDragStarted(viewHolder: RecyclerView.ViewHolder) {
+        itemTouchHelper.startDrag(viewHolder)
+    }
+
+    override fun onItemMove(fromPosition: Int, toPosition: Int) {
+        if (fromPosition == 0 || toPosition == 0) return
+        adapter.apply {
+            mainViewModel.switch(
+                    itemToEntity(list[fromPosition]).id,
+                    itemToEntity(list[toPosition]).id
+            ) {
+                Collections.swap(list, fromPosition, toPosition)
+                notifyItemMoved(fromPosition, toPosition)
+            }
+        }
+    }
+
+    override fun onItemDismiss(position: Int) {
+        onDeleteDialog
+                ?.positiveButton(R.string.all_yes) {
+                    adapter.apply {
+                        mainViewModel.remove((list[position]).id) {
+                            list.removeAt(position)
+                            notifyItemRemoved(position)
+                        }
+                    }
+                }
+                ?.onDismiss { adapter.notifyItemChanged(position) }
+                ?.show()
+
+    }
+
+    private fun launchPasswordFragment(item: PasswordItem?) {
+        mainSharedViewModel.passwordItemToEdit.postValue(item)
+        findNavController().navigate(R.id.action_mainFragment_to_passwordFragment)
+    }
+
+    private fun setDeleteMode() {
+        menu?.getItem(MENU_DELETE_ACTION_INDEX)?.apply {
+            if (!isChecked && adapter.list.isNotEmpty()) {
+                setDeleteModeOn()
+            } else {
+                setDeleteModeOff()
+            }.also {
+                callback.isInDeleteMode = isChecked
+            }
+        }
+    }
+
+    private fun setDeleteModeOn() {
+        menu?.getItem(MENU_DELETE_ACTION_INDEX)?.apply {
+            showSnackbar(R.string.all_delete_mode_on)
+            context?.let {
+                icon.tint(it, R.color.accent)
+            }
+            isChecked = true
+        }
+    }
+
+    private fun setDeleteModeOff() {
+        menu?.getItem(MENU_DELETE_ACTION_INDEX)?.apply {
+            dismissSnackbar()
+            context?.let {
+                icon.tint(it, R.attr.iconColor, true)
+            }
+            isChecked = false
+        }
+    }
+
+    private fun addPasswordToList(model: PasswordModel?) {
+        adapter.apply {
+            model?.apply {
+                list.add(modelToItem(this))
+                notifyDataSetChanged()
+            }
+        }
+    }
+
+    private fun editPasswordInList(model: PasswordModel?) {
+        adapter.apply {
+            model?.apply {
+                list.forEachIndexed { i, item ->
+                    if (item.id == id) {
+                        list[i] = modelToItem(model)
+                        notifyItemChanged(i)
+                    }
+                }
+            }
+        }
+    }
+
+    companion object {
+
+        private const val MENU_DELETE_ACTION_INDEX = 0
+
+    }
+
 }

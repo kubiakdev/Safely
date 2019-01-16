@@ -1,9 +1,16 @@
-package com.kubiakdev.safely.data.mapper
-
 import com.kubiakdev.safely.data.db.entity.DetailEntity
 import com.kubiakdev.safely.data.model.DetailModel
+import com.kubiakdev.safely.ui.password.adapter.item.DetailItem
 
-fun entityToModel(entity: DetailEntity): DetailModel = DetailModel(
+fun modelToEntity(model: DetailModel) = DetailEntity(
+        model.id,
+        model.iconResId,
+        model.key,
+        model.value,
+        model.isShown
+)
+
+fun itemToModel(entity: DetailItem) = DetailModel(
         entity.id,
         entity.iconResId,
         entity.key,
@@ -11,7 +18,7 @@ fun entityToModel(entity: DetailEntity): DetailModel = DetailModel(
         entity.isShown
 )
 
-fun modelToEntity(model: DetailModel): DetailEntity = DetailEntity(
+fun modelToItem(model: DetailModel) = DetailItem(
         model.id,
         model.iconResId,
         model.key,

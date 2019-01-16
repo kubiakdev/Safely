@@ -6,27 +6,27 @@ import java.util.*
 
 @Entity
 data class PasswordEntity(
-        var title: String = "",
-        var jsonDetailList: String = "",
-        var created: Date = Date(),
-        var modified: Date = Date(),
-        var isFavourite: Boolean = false,
-        var cardColor: String = "",
-        var category: String = ""
+        var title: String,
+        var jsonDetailList: String,
+        var created: Date,
+        var modified: Date,
+        var isFavourite: Boolean,
+        var cardColor: String,
+        var category: String
 ) {
 
     @Id(assignable = true)
     var id: Long = 0
 
     constructor(
-            id: Long = 0,
-            title: String = "",
-            jsonDetailList: String = "",
-            created: Date = Date(),
-            modified: Date = Date(),
-            isFavourite: Boolean = false,
-            cardColor: String = "",
-            category: String = ""
+            id: Long,
+            title: String,
+            jsonDetailList: String,
+            created: Date,
+            modified: Date,
+            isFavourite: Boolean,
+            cardColor: String,
+            category: String
     ) : this(
             title,
             jsonDetailList,
@@ -45,4 +45,5 @@ data class PasswordEntity(
         this.cardColor = cardColor
         this.category = category
     }
+
 }

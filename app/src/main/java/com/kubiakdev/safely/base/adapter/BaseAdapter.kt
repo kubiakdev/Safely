@@ -3,41 +3,40 @@ package com.kubiakdev.safely.base.adapter
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.kubiakdev.safely.data.model.Model
-import java.util.*
 
-abstract class BaseAdapter<M : Model, H : BaseAdapter.BaseHolder<M>, I : BaseAdapterListener>(
-        open var list: MutableList<M>,
-        protected open val dragListener: OnStartDragListener
-) : RecyclerView.Adapter<H>(), ItemTouchHelperAdapter {
-
-    open lateinit var adapterListener: I
+abstract class BaseAdapter<I : ListItem, H : BaseAdapter.BaseViewHolder<I, L>, L : AdapterListener>(
+        open var list: MutableList<I>,
+        open var listener: L
+) : RecyclerView.Adapter<BaseAdapter.BaseViewHolder<I, L>>(), ItemTouchHelperAdapter {
 
     abstract override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): H
 
-    override fun onBindViewHolder(holder: H, position: Int) {
-        holder.bindHolder(list[position], dragListener)
+    override fun onBindViewHolder(holder: BaseViewHolder<I, L>, position: Int) {
+        holder.apply {
+            bindHolder(list[position])
+            itemView.setOnClickListener(this)
+        }
     }
 
     override fun getItemCount(): Int = list.size
 
     override fun onItemDismiss(position: Int) {}
 
-    override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
-        Collections.swap(list, fromPosition, toPosition)
-        notifyItemMoved(fromPosition, toPosition)
-        return true
-    }
+    override fun onItemMove(fromPosition: Int, toPosition: Int) {}
 
-    abstract class BaseHolder<M>(
+    abstract class BaseViewHolder<I : ListItem, L : AdapterListener>(
             protected open val view: View,
-            protected open val listener: BaseAdapterListener
-    ) : RecyclerView.ViewHolder(view), ItemTouchHelperViewHolder {
+            protected open var listener: L
+    ) : RecyclerView.ViewHolder(view), ItemTouchHelperViewHolder, View.OnClickListener {
 
         override fun onItemSelected() {}
 
         override fun onItemClear() {}
 
-        abstract fun bindHolder(model: M, dragListener: OnStartDragListener)
+        abstract fun bindHolder(item: I)
+
+        override fun onClick(v: View?) {}
+
     }
+
 }

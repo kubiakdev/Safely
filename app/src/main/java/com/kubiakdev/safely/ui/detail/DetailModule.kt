@@ -12,4 +12,5 @@ abstract class DetailModule {
     @Binds
     @FragmentScope
     abstract fun fragment(fragment: DetailFragment): Fragment
+
 }

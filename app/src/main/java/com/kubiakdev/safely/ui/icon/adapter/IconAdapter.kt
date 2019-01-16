@@ -5,41 +5,38 @@ import android.view.View
 import android.view.ViewGroup
 import com.kubiakdev.safely.R
 import com.kubiakdev.safely.base.adapter.BaseAdapter
-import com.kubiakdev.safely.base.adapter.BaseAdapterListener
-import com.kubiakdev.safely.base.adapter.OnStartDragListener
-import com.kubiakdev.safely.data.model.IconModel
-import com.kubiakdev.safely.util.extension.setSameOnClickListenerFor
+import com.kubiakdev.safely.ui.icon.adapter.item.IconItem
 import kotlinx.android.synthetic.main.item_icon.view.*
 
 class IconAdapter(
-        override var list: MutableList<IconModel>,
-        override var dragListener: OnStartDragListener
-) : BaseAdapter<IconModel, IconAdapter.IconHolder, AdapterListener>(list, dragListener) {
+        override var list: MutableList<IconItem>,
+        override var listener: IconAdapterListener
+) : BaseAdapter<IconItem, IconAdapter.IconViewHolder, IconAdapterListener>(list, listener) {
 
-    override lateinit var adapterListener: AdapterListener
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IconHolder =
-            IconHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IconViewHolder =
+            IconViewHolder(
                     view = LayoutInflater.from(parent.context)
                             .inflate(R.layout.item_icon, parent, false),
-                    listener = adapterListener)
+                    listener = listener
+            )
 
-    inner class IconHolder(
+    class IconViewHolder(
             override val view: View,
-            override val listener: BaseAdapterListener
-    ) : BaseAdapter.BaseHolder<IconModel>(view, adapterListener) {
+            override var listener: IconAdapterListener
+    ) : BaseAdapter.BaseViewHolder<IconItem, IconAdapterListener>(view, listener) {
 
-        override fun bindHolder(model: IconModel, dragListener: OnStartDragListener) {
-            view.run {
-                ib_icon.run {
-                    setImageResource(model.iconResId)
-                    contentDescription = model.iconResId.toString()
+        override fun bindHolder(item: IconItem) {
+            view.apply {
+                ibIcon.apply {
+                    setImageResource(item.iconResId)
+                    contentDescription = item.iconResId.toString()
                 }
-                setSameOnClickListenerFor(
-                        { adapterListener.onIconClicked(model.iconResId) },
-                        mcv_icon, cl_icon, ib_icon
-                )
+
+                setOnClickListener {
+                    listener.onIconClicked(item.iconResId)
+                }
             }
         }
     }
+
 }

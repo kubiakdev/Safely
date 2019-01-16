@@ -4,75 +4,112 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageButton
-import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.kubiakdev.safely.R
 import com.kubiakdev.safely.base.adapter.BaseAdapter
-import com.kubiakdev.safely.base.adapter.OnStartDragListener
-import com.kubiakdev.safely.data.model.PasswordModel
+import com.kubiakdev.safely.ui.main.adapter.item.DetailKeyItem
+import com.kubiakdev.safely.ui.main.adapter.item.PasswordItem
+import kotlinx.android.synthetic.main.item_detail_key.view.*
 import kotlinx.android.synthetic.main.item_password.view.*
-import java.util.*
 
 class MainAdapter(
-        override var list: MutableList<PasswordModel>,
-        override val dragListener: OnStartDragListener
-) : BaseAdapter<PasswordModel, MainAdapter.MainHolder, AdapterListener>
-(list, dragListener) {
+        override var list: MutableList<PasswordItem>,
+        override var listener: MainAdapterListener
+) : BaseAdapter<PasswordItem, MainAdapter.MainViewHolder, MainAdapterListener>(list, listener) {
 
-    override lateinit var adapterListener: AdapterListener
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainHolder =
-            MainHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder =
+            MainViewHolder(
                     view = LayoutInflater.from(parent.context)
                             .inflate(R.layout.item_password, parent, false),
-                    listener = adapterListener)
+                    listener = listener
+            )
 
-    override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
-        if (fromPosition == 0 || toPosition == 0) return false
-        Collections.swap(list, fromPosition, toPosition)
-        notifyItemMoved(fromPosition, toPosition)
-        return true
+    override fun onItemMove(fromPosition: Int, toPosition: Int) {
+        listener.onItemMove(fromPosition, toPosition)
     }
 
     override fun onItemDismiss(position: Int) {
-        adapterListener.showOnDeleteDialog(position)
+        listener.onItemDismiss(position)
     }
 
-
-    inner class MainHolder(
+    class MainViewHolder(
             override val view: View,
-            override val listener: AdapterListener
-    ) : BaseAdapter.BaseHolder<PasswordModel>(view, listener) {
+            override var listener: MainAdapterListener
+    ) : BaseAdapter.BaseViewHolder<PasswordItem, MainAdapterListener>(view, listener) {
 
-        override fun onItemSelected() {}
+        override fun bindHolder(item: PasswordItem) {
+            view.apply {
+                tvPasswordItem.text = item.title
 
-        override fun bindHolder(model: PasswordModel, dragListener: OnStartDragListener) {
-            view.run {
-                mcv_password_item.setCardBackgroundColor(
-                        ContextCompat.getColor(context, model.cardColor.toInt())
-                )
-                tv_password_item.text = model.title
-                setFavouriteDrawable(ib_password_item, model.isFavourite)
-
-                ib_password_item.run {
-                    setFavouriteDrawable(this, model.isFavourite)
+                ibPasswordItem.apply {
+                    setFavouriteDrawable(this, item.isFavourite)
                     setOnClickListener {
-                        model.isFavourite = !model.isFavourite.also { isFavourite ->
-                            setFavouriteDrawable(this, isFavourite)
-                            list[adapterPosition].isFavourite = isFavourite
-                        }
+                        item.isFavourite = !item.isFavourite
+                        setFavouriteDrawable(this, item.isFavourite)
                     }
                 }
+
+                rvPasswordItem.apply {
+                    layoutManager = StaggeredGridLayoutManager(SPAN_COUNT, ORIENTATION)
+                    this.adapter = DetailKeyAdapter(
+                            list = item.detailList
+                                    .filterIndexed { index, _ -> index != 0 }
+                                    .map { DetailKeyItem(it.key) }
+                                    .toMutableList(),
+                            listener = listener,
+                            parentAdapterPosition = adapterPosition
+                    ).also { it.notifyDataSetChanged() }
+                }
+            }
+        }
+
+        override fun onClick(v: View?) {
+            listener.onItemClicked(adapterPosition)
+        }
+
+        private fun setFavouriteDrawable(ib: AppCompatImageButton, isFavourite: Boolean) {
+            ib.setImageResource(
+                    if (isFavourite) R.drawable.ic_star else R.drawable.ic_star_border
+            )
+        }
+    }
+
+    class DetailKeyAdapter(
+            override var list: MutableList<DetailKeyItem>,
+            override var listener: MainAdapterListener,
+            private val parentAdapterPosition: Int
+    ) : BaseAdapter<DetailKeyItem, DetailKeyAdapter.DetailKeyViewHolder, MainAdapterListener>(
+            list,
+            listener
+    ) {
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DetailKeyViewHolder =
+                DetailKeyViewHolder(
+                        view = LayoutInflater.from(parent.context)
+                                .inflate(R.layout.item_detail_key, parent, false),
+                        listener = listener
+                )
+
+        inner class DetailKeyViewHolder(
+                override var view: View,
+                override var listener: MainAdapterListener
+        ) : BaseViewHolder<DetailKeyItem, MainAdapterListener>(view, listener) {
+
+            override fun bindHolder(item: DetailKeyItem) {
+                view.tvDetailKeyItem.text = item.key
+            }
+
+            override fun onClick(v: View?) {
+                listener.onItemClicked(parentAdapterPosition)
             }
         }
     }
 
-    private fun setFavouriteDrawable(ib: AppCompatImageButton, isFavourite: Boolean) {
-        ib.setImageResource(
-                if (isFavourite) {
-                    R.drawable.ic_star
-                } else {
-                    R.drawable.ic_star_border
-                }
-        )
+    companion object {
+
+        private const val SPAN_COUNT = 1
+        private const val ORIENTATION = 1
+
     }
+
 }

@@ -5,11 +5,9 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 
-
 class SimpleItemTouchHelperCallback(
         var adapter: ItemTouchHelperAdapter,
-        var isInDeleteMode: Boolean = false,
-        var onUpdateDataList: () -> Unit
+        var isInDeleteMode: Boolean = false
 ) : ItemTouchHelper.Callback() {
 
     override fun isLongPressDragEnabled(): Boolean = true
@@ -29,8 +27,8 @@ class SimpleItemTouchHelperCallback(
             } else {
                 ItemTouchHelper.Callback.makeMovementFlags(
                         ItemTouchHelper.UP or ItemTouchHelper.DOWN or
-                                ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-                        , 0
+                                ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT,
+                        0
                 )
             }
         } else {
@@ -57,14 +55,12 @@ class SimpleItemTouchHelperCallback(
             false
         } else {
             adapter.onItemMove(source.adapterPosition, target.adapterPosition)
-            onUpdateDataList()
             true
         }
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, i: Int) {
         adapter.onItemDismiss(viewHolder.adapterPosition)
-        onUpdateDataList()
     }
 
     override fun onChildDraw(
@@ -85,17 +81,14 @@ class SimpleItemTouchHelperCallback(
 
     override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
         if (actionState != ItemTouchHelper.ACTION_STATE_IDLE) {
-            if (viewHolder is ItemTouchHelperViewHolder) {
-                (viewHolder as ItemTouchHelperViewHolder?)?.onItemSelected()
-            }
+            (viewHolder as? ItemTouchHelperViewHolder?)?.onItemSelected()
         }
         super.onSelectedChanged(viewHolder, actionState)
     }
 
     override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
         super.clearView(recyclerView, viewHolder)
-        if (viewHolder is ItemTouchHelperViewHolder) {
-            (viewHolder as ItemTouchHelperViewHolder).onItemClear()
-        }
+        (viewHolder as? ItemTouchHelperViewHolder)?.onItemClear()
     }
+
 }

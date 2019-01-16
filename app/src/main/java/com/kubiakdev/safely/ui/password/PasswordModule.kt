@@ -12,4 +12,5 @@ abstract class PasswordModule {
     @Binds
     @FragmentScope
     abstract fun fragment(fragment: PasswordFragment): Fragment
+
 }

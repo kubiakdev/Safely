@@ -13,40 +13,40 @@ open class BaseViewModel(
 
     override val coroutineContext = Dispatchers.Main + parentJob
 
-//    override fun onCleared() {
-//        super.onCleared()
-//        parentJob.cancel()
-//    }
+    override fun onCleared() {
+        parentJob.cancel()
+        super.onCleared()
+    }
 
     protected fun <T> launchCatching(
             executionContext: CoroutineContext = coroutineContextProvider.io,
             action: () -> T,
             onSuccess: (value: T) -> Unit = {},
-            onFailure: (value: Throwable) -> Unit = { it.printStackTrace() },
+            onFailure: (value: Throwable) -> Unit = { throw Exception(it) },
             onSuccessContext: CoroutineContext = coroutineContextProvider.main,
             onFailureContext: CoroutineContext = coroutineContextProvider.main
-    ): Job =
-            launch(executionContext + parentJob) {
-                Result.runCatching {
-                    action()
+    ): Job = launch(executionContext) {
+        Result.runCatching {
+            action()
+        }
+                .onSuccess {
+                    if (onSuccessContext == executionContext) {
+                        onSuccess(it)
+                    } else {
+                        withContext(onSuccessContext) {
+                            onSuccess(it)
+                        }
+                    }
                 }
-                        .onSuccess {
-                            if (onSuccessContext == executionContext) {
-                                onSuccess(it)
-                            } else {
-                                withContext(onSuccessContext + parentJob) {
-                                    onSuccess(it)
-                                }
-                            }
+                .onFailure {
+                    if (onFailureContext == executionContext) {
+                        onFailure(it)
+                    } else {
+                        withContext(onFailureContext) {
+                            onFailure(it)
                         }
-                        .onFailure {
-                            if (onFailureContext == executionContext) {
-                                onFailure(it)
-                            } else {
-                                withContext(onFailureContext + parentJob) {
-                                    onFailure(it)
-                                }
-                            }
-                        }
-            }
+                    }
+                }
+    }
+
 }

@@ -4,12 +4,13 @@
     android:shape="rectangle">
 
     <stroke
-        android:color="#ffa726" android:width="@dimen/width_rectangle_stroke"/>
+        android:width="5dp"
+        android:color="#ffa726" />
 
     <size
         android:width="48dp"
         android:height="48dp"/>
 
-    <corners
-        android:radius="@dimen/radius_rectangle_corner"/>
+    <corners android:radius="10dp" />
+
 </shape>

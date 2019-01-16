@@ -5,12 +5,12 @@ import io.objectbox.annotation.Id
 
 @Entity
 data class TemplateEntity(
-        var iconResId: Int = 0,
-        var key: String = ""
+        var iconResId: Int,
+        var key: String
 ) {
 
     @Id
-    var id: Long? = 0
+    var id: Long = 0
 
     constructor(
             id: Long,
@@ -24,4 +24,5 @@ data class TemplateEntity(
         this.iconResId = iconResId
         this.key = key
     }
+
 }

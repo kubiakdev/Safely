@@ -12,4 +12,5 @@ abstract class MainModule {
     @Binds
     @FragmentScope
     abstract fun fragment(fragment: MainFragment): Fragment
+
 }

@@ -3,25 +3,31 @@ package com.kubiakdev.safely.base
 import android.os.Bundle
 import android.view.*
 import androidx.annotation.StringRes
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.kubiakdev.safely.R
 import com.kubiakdev.safely.base.adapter.OnStartDragListener
-import com.kubiakdev.safely.ui.activity.FrameActivity
+import com.kubiakdev.safely.util.extension.hideKeyboard
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.activity_frame.*
 
-abstract class BaseFragment :
-        DaggerFragment(),
-        BaseView,
-        OnStartDragListener {
+abstract class BaseFragment : DaggerFragment(), BaseView, OnStartDragListener {
 
-    protected val activity by lazy { this.getActivity() as FrameActivity }
+    protected val activity by lazy { getActivity() as BaseActivity }
 
     protected abstract val layoutId: Int
 
-    protected abstract val menuResId: Int?
+    protected open val menuResId: Int? = null
 
-    protected var menu: Menu? = null
+    protected open val itemTouchHelper: ItemTouchHelper? = null
+
+    var menu: Menu? = null
+
+    private var isSharedViewModelsInitialized = false
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        initViewModel()
+    }
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -36,6 +42,11 @@ abstract class BaseFragment :
         setHasOptionsMenu(menuResId != null)
         initActivityComponents()
         initComponents()
+        itemTouchHelper
+        if (!isSharedViewModelsInitialized) {
+            initSharedViewModels()
+            isSharedViewModelsInitialized = true
+        }
     }
 
     protected open fun inflateView(
@@ -45,65 +56,34 @@ abstract class BaseFragment :
     ): View = inflater.inflate(layoutId, container, false)
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        menuResId?.run {
-            hideFullFragment()
-            activity.menuInflater.inflate(this, menu)
+        menuResId?.let {
+            activity.menuInflater.inflate(it, menu)
             this@BaseFragment.menu = menu
-            return super.onCreateOptionsMenu(menu, inflater)
         }
-        showFullFragment()
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {}
+    override fun onDragStarted(viewHolder: RecyclerView.ViewHolder) {}
+
+    protected open fun initViewModel() {}
 
     protected open fun initActivityComponents() {}
 
     protected open fun initComponents() {}
 
-    fun showSnackBar(@StringRes stringRes: Int) {
-        activity.showSnackBar(stringRes)
+    protected open fun initSharedViewModels() {}
+
+    fun popBackStack() {
+        view?.hideKeyboard()
+        findNavController().popBackStack()
     }
 
-    fun hideFullFragment() = switchBarAndFabVisibility(true).also {
-        changeFragmentBottomMargin(false)
+    fun showSnackbar(@StringRes stringResId: Int) {
+        activity.showSnackbar(stringResId)
     }
 
-    fun showFullFragment() = switchBarAndFabVisibility(false).also {
-        changeFragmentBottomMargin(true)
-    }
-
-    private fun switchBarAndFabVisibility(shouldBeVisible: Boolean) {
-        activity.run {
-            changeVisibility(shouldBeVisible, bar_frame, fab_frame, v_shadow_frame)
-        }
-    }
-
-    private fun changeVisibility(shouldBeVisible: Boolean, vararg views: View) {
-        views.forEach {
-            it.visibility = if (shouldBeVisible && it.visibility != View.VISIBLE) {
-                View.VISIBLE
-            } else if (!shouldBeVisible && it.visibility != View.GONE) {
-                View.GONE
-            } else {
-                it.visibility
-            }
-        }
-
-    }
-
-    private fun changeFragmentBottomMargin(shouldBeZero: Boolean) {
-        val barHeight = resources.getDimension(R.dimen.height_bar).toInt()
-        (activity.nav_host_frame?.view?.layoutParams as ViewGroup.MarginLayoutParams).run {
-            bottomMargin = if (shouldBeZero && bottomMargin != 0) {
-                0
-            } else if (!shouldBeZero && bottomMargin != barHeight) {
-                barHeight
-            } else {
-                bottomMargin
-            }
-        }
-
+    fun dismissSnackbar() {
+        activity.dismissSnackbar()
     }
 
 }

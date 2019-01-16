@@ -1,31 +1,19 @@
 package com.kubiakdev.safely.data
 
-import com.kubiakdev.safely.data.db.entity.CipherEntity
 import com.kubiakdev.safely.data.db.entity.DetailEntity
 import com.kubiakdev.safely.data.db.entity.PasswordEntity
+import com.kubiakdev.safely.data.db.entity.TemplateEntity
 import io.objectbox.Box
 import io.objectbox.BoxStore
-import io.reactivex.Observable
 
 interface DataManager {
 
     val boxStore: BoxStore
 
-    var allDetailEntities: MutableList<DetailEntity>
+    val passwordBox: Box<PasswordEntity>
 
-    var allPasswordEntities: MutableList<PasswordEntity>
+    val detailBox: Box<DetailEntity>
 
-    val cipherBox: Observable<Box<CipherEntity>>
+    val templateBox: Box<TemplateEntity>
 
-    val passwordBox: Observable<Box<PasswordEntity>>
-
-    val allCipherEntities: Observable<List<CipherEntity>>
-
-    fun add(entity: CipherEntity): Observable<Long>
-
-    fun add(entity: PasswordEntity): Long
-
-    fun getPasswordEntity(entity: PasswordEntity): Observable<PasswordEntity>
-
-    fun getPasswordEntityByModified(modified: String): Observable<PasswordEntity>
 }

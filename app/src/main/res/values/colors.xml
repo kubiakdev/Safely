@@ -1,9 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#FFFFFF</color>
-    <color name="colorPrimaryDark">#616161</color>
-    <color name="colorAccent">#ffa726</color>
-    <color name="textColorPrimary">#000000</color>
-    <color name="textColorSecondary">#616161</color>
-    <color name="text_color_primary">#000000</color>
+
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="accent">#FFA726</color>
+
+    <color name="lightPrimary">#F5F5F5</color>
+    <color name="lightBackground">#F5F5F5</color>
+    <color name="lightIcon">@color/black</color>
+    <color name="lightNestedIcon">@color/black</color>
+    <color name="lightBottomBar">@color/white</color>
+    <color name="lightTextPrimary">@color/black</color>
+    <color name="lightTextSecondary">#333333</color>
+    <color name="lightCardView">@color/white</color>
+
+    <color name="darkPrimary">#303030</color>
+    <color name="darkBackground">#303030</color>
+    <color name="darkIcon">#EEEEEE</color>
+    <color name="darkNestedIcon">#EEEEEE</color>
+    <color name="darkBottomBar">#212121</color>
+    <color name="darkTextPrimary">#EEEEEE</color>
+    <color name="darkTextSecondary">#EEEEEE</color>
+    <color name="darkCardView">#424242</color>
+
 </resources>

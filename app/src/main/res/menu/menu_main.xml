@@ -3,9 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_detail_more"
+        android:id="@+id/action_main_delete"
+        android:icon="@drawable/ic_delete"
+        android:title="@string/main_menu_delete"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_main_more"
         android:icon="@drawable/ic_more"
-        android:title="More"
-        app:showAsAction="never|ifRoom" />
+        android:title="@string/main_menu_more"
+        app:showAsAction="ifRoom" />
 
 </menu>

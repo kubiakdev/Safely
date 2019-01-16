@@ -12,4 +12,5 @@ class DataModule {
     @Singleton
     @Provides
     fun provideDataManager(): DataManager = DbManager()
+
 }

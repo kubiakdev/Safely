@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <attr name="backgroundColor" format="reference" />
+    <attr name="activityBackground" format="reference" />
+    <attr name="iconColor" format="reference" />
+    <attr name="nestedIconColor" format="reference" />
+    <attr name="bottomBarColor" format="reference" />
+    <attr name="textColorPrimary" format="reference" />
+    <attr name="textColorSecondary" format="reference" />
+    <attr name="cardViewColor" format="reference" />
+
+</resources>

@@ -1,6 +1,6 @@
 package com.kubiakdev.safely.di.component
 
-import com.kubiakdev.safely.app.App
+import com.kubiakdev.safely.App
 import com.kubiakdev.safely.di.module.AppModule
 import com.kubiakdev.safely.di.module.DataModule
 import com.kubiakdev.safely.di.module.UtilModule
@@ -20,4 +20,5 @@ interface AppComponent : AndroidInjector<App> {
 
     @Component.Builder
     abstract class AppBuilder : AndroidInjector.Builder<App>()
+
 }

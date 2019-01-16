@@ -3,160 +3,95 @@ package com.kubiakdev.safely.ui.password.adapter
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
-import android.graphics.Typeface
 import android.text.InputType
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.AppCompatEditText
+import android.widget.EditText
 import com.kubiakdev.safely.R
 import com.kubiakdev.safely.base.adapter.BaseAdapter
-import com.kubiakdev.safely.base.adapter.OnStartDragListener
-import com.kubiakdev.safely.data.model.DetailModel
-import com.kubiakdev.safely.util.Const
+import com.kubiakdev.safely.ui.password.adapter.item.DetailItem
 import com.kubiakdev.safely.util.extension.addAfterTextChangedListener
-import com.kubiakdev.safely.util.extension.toEditable
 import kotlinx.android.synthetic.main.item_detail.view.*
-import java.util.*
-
 
 class PasswordAdapter(
-        override var list: MutableList<DetailModel>,
-        override val dragListener: OnStartDragListener
-) : BaseAdapter<DetailModel, PasswordAdapter.PasswordDetailHolder, AdapterListener>
-(list, dragListener) {
+        override var list: MutableList<DetailItem>,
+        override var listener: PasswordAdapterListener,
+        var isNewPassword: Boolean
+) : BaseAdapter<DetailItem, PasswordAdapter.PasswordViewHolder, PasswordAdapterListener>(
+        list, listener
+) {
 
-    override lateinit var adapterListener: AdapterListener
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PasswordDetailHolder =
-            PasswordDetailHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PasswordViewHolder =
+            PasswordViewHolder(
                     view = LayoutInflater.from(parent.context)
                             .inflate(R.layout.item_detail, parent, false),
-                    listener = adapterListener)
+                    listener = listener,
+                    isNewPassword = isNewPassword
+            )
 
-    override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
-        if (fromPosition == 0 || toPosition == 0) return false
-        Collections.swap(list, fromPosition, toPosition)
-        notifyItemMoved(fromPosition, toPosition)
-        return true
-    }
-
-    override fun onItemDismiss(position: Int) {
-        list.run {
-            removeAt(position)
-            if (isEmpty()) {
-                adapterListener.switchOffDeleteMode()
-            }
-        }.also { notifyItemRemoved(position) }
-    }
-
-
-    inner class PasswordDetailHolder(
+    class PasswordViewHolder(
             override val view: View,
-            override val listener: AdapterListener
-    ) : BaseAdapter.BaseHolder<DetailModel>(view, listener) {
+            override var listener: PasswordAdapterListener,
+            private val isNewPassword: Boolean
+    ) : BaseAdapter.BaseViewHolder<DetailItem, PasswordAdapterListener>(view, listener) {
 
-        override fun onItemSelected() {}
+        override fun bindHolder(item: DetailItem) {
+            view.apply {
+                ivDetailItemIcon.setImageResource(item.iconResId)
 
-        override fun bindHolder(model: DetailModel, dragListener: OnStartDragListener) {
-            view.run {
-                et_detail_item_key.text = toEditable(model.key)
-                et_detail_item_value.text = toEditable(model.value)
-                iv_detail_item_icon.setImageResource(model.iconResId)
+                ivDetailItemCopy.setOnClickListener {
+                    copyToClipboard(tilDetailItem.editText) {
+                        listener.showSnackbar(R.string.all_value_copied)
+                    }
+                }
 
-                if (adapterPosition == 0) {
-                    et_detail_item_key.run {
+                tilDetailItem.apply {
+                    hint = item.key
+                    editText?.apply {
+                        setText(item.value)
+                        requestFocus()
                         addAfterTextChangedListener {
-                            val title = resources.getString(R.string.all_new_title)
-                            this.text = toEditable(title)
-                            list[adapterPosition].key = title
-                        }
-                    }
-
-                    et_detail_item_value.run {
-                        addAfterTextChangedListener {
-                            adapterListener.setTitleText(
-                                    if (text.isNullOrEmpty()) {
-                                        "null"
-                                    } else {
-                                        it.toString()
-                                    }
-                            )
-                            list[adapterPosition].value = et_detail_item_value.text.toString()
-                        }
-                    }
-                } else {
-                    et_detail_item_key.run {
-                        addAfterTextChangedListener {
-                            list[adapterPosition].key = it.toString()
-                        }
-                    }
-
-                    et_detail_item_value.run {
-                        addAfterTextChangedListener {
-                            list[adapterPosition].value = it.toString()
-                        }
-                    }
-                }
-
-                cl_detail_item.setOnTouchListener { _, event ->
-                    if (event.action == MotionEvent.ACTION_DOWN) {
-                        dragListener.onStartDrag(this@PasswordDetailHolder)
-                    }
-                    false
-                }
-
-                et_detail_item_value.run {
-                    text = toEditable(model.value)
-                    requestFocus()
-                    performClick()
-                }
-
-                ib_detail_item_copy.setOnClickListener {
-                    copyToClipboard(view.et_detail_item_value)
-                    listener.showSnackBar(R.string.all_value_copied)
-                }
-
-                setInputType(model.isShown)
-                ib_detail_item_show.setOnClickListener {
-                    if (model.isShown) {
-                        model.isShown = false
-                        list[adapterPosition].isShown = false
-                        setInputType(false)
-                    } else {
-                        model.isShown = true
-                        list[adapterPosition].isShown = true
-                        setInputType(true)
-                    }
-                }
-            }
-        }
-
-        private fun copyToClipboard(et: AppCompatEditText) {
-            ((et.context.getSystemService(Context.CLIPBOARD_SERVICE)) as ClipboardManager).run {
-                primaryClip = ClipData.newPlainText("text", et.text.toString())
-            }
-        }
-
-        private fun setInputType(shouldBeShown: Boolean) {
-            view.et_detail_item_value.run {
-                inputType = if (shouldBeShown) {
-                    InputType.TYPE_CLASS_TEXT or
-                            InputType.TYPE_TEXT_FLAG_MULTI_LINE or
-                            InputType.TYPE_TEXT_VARIATION_PASSWORD.also {
-                                view.ib_detail_item_show
-                                        .setImageResource(R.drawable.ic_visibility_off)
+                            item.value = it.toString()
+                            if (adapterPosition == 0) {
+                                listener.setTitleText(
+                                        if (item.value.isEmpty()) {
+                                            context.getString(R.string.password_title_default)
+                                        } else {
+                                            item.value
+                                        }
+                                )
                             }
-                } else {
-                    (InputType.TYPE_CLASS_TEXT or
-                            InputType.TYPE_TEXT_FLAG_MULTI_LINE).also {
-                        view.ib_detail_item_show.setImageResource(R.drawable.ic_visibility_on)
+                        }
+
+                        if (adapterPosition == 0) {
+                            listener.setTitleText(item.value)
+                            inputType = InputType.TYPE_CLASS_TEXT
+                        }
+                    }
+
+                    if (isNewPassword || adapterPosition == 0) {
+                        isPasswordVisibilityToggleEnabled = false
                     }
                 }
-                setSelection(text?.length ?: 0)
-                typeface = Typeface.create(Const.FONT_FAMILY_NAME, Typeface.NORMAL)
+            }
+        }
+
+        private fun copyToClipboard(et: EditText?, actionAfterCopy: () -> Unit) {
+            et?.apply {
+                if (text?.isNotBlank() == true) {
+                    ((context.getSystemService(Context.CLIPBOARD_SERVICE)) as ClipboardManager)
+                            .primaryClip = ClipData.newPlainText(COPY_LABEL, text.toString())
+                }
+                actionAfterCopy()
             }
         }
     }
+
+    companion object {
+
+        private const val COPY_LABEL = "text"
+
+    }
+
 }

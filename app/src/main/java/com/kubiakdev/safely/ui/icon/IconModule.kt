@@ -12,4 +12,5 @@ abstract class IconModule {
     @Binds
     @FragmentScope
     abstract fun fragment(fragment: IconFragment): Fragment
+
 }

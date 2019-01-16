@@ -1,43 +1,38 @@
 <resources>
     <string name="app_name">Safely</string>
 
-
-    <string name="all_empty"/>
-    <string name="all_delete_on">Delete mode on</string>
-    <string name="all_delete_off">Delete mode off</string>
-    <string name="all_edit_on">Edit mode on</string>
-    <string name="all_edit_off">Edit mode off</string>
-    <string name="all_value_copied">Value copied</string>
-    <string name="all_add">Add</string>
-    <string name="all_edit">Edit</string>
-    <string name="all_delete">Delete</string>
+    <string name="all_delete_mode_on">Delete mode on</string>
+    <string name="all_edit_mode_on">Edit mode on</string>
+    <string name="all_no">No</string>
     <string name="all_placeholder_res">R.drawable.ic_image</string>
+    <string name="all_placeholder_res_id">2131165300</string>
+    <string name="all_value_copied">Value copied</string>
+    <string name="all_yes">Yes</string>
 
-    <string name="all_new_title">Title</string>
-    <string name="all_new_username">Username</string>
-    <string name="all_new_login">Login</string>
-    <string name="all_new_email">Email</string>
-    <string name="all_new_password">Password</string>
-    <string name="all_new_description">Description</string>
-    <string name="all_new_custom">Custom</string>
-    <string name="all_new_card_number">Card number</string>
-    <string name="all_new_account_number">Account number</string>
+    <string name="detail_menu_add">Add</string>
+    <string name="detail_menu_edit">Edit</string>
+    <string name="detail_menu_delete">Delete</string>
+    <string name="detail_title">Add detail</string>
 
-    <string name="delete_password_question">Delete password?</string>
-    <string name="delete_password_yes">Yes</string>
-    <string name="delete_password_no">No</string>
+    <string name="detail_edition_hint_key">Key name</string>
+    <string name="detail_edition_icon_select">Select icon &amp; key</string>
+    <string name="detail_edition_notnull_key_required">The key cannot be empty</string>
+    <string name="detail_edition_title">Add template</string>
 
-    <string name="password_title_hint">Title</string>
-    <string name="password_value_hint">Value</string>
-    <string name="password_record_new">Add record</string>
-    
-    <string name="detail_icon_desc">Icon</string>
-    <string name="detail_show_desc">Show</string>
-    <string name="detail_copy_desc">Copy</string>
+    <string name="dialog_delete_password_question">Delete password?</string>
 
-    <string name="template_icon_select">Select icon &amp; key</string>
-    <string name="template_hint_key">Key name</string>
+    <string name="icon_title">Icons</string>
 
-    <string name="template_notnull_key_required">The key cannot be empty</string>
+    <string name="main_menu_delete">Delete</string>
+    <string name="main_menu_more">More</string>
+    <string name="main_title">Passwords</string>
+
+    <string name="password_menu_delete">Delete</string>
+    <string name="password_menu_save">Save</string>
+    <string name="password_menu_add">Add</string>
+    <string name="password_notnull_title_required">The title cannot be empty</string>
+    <string name="password_title_default">New password</string>
+
+    <string name="template_menu_save">Save</string>
 
 </resources>

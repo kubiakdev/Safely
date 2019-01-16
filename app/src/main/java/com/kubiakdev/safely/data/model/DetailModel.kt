@@ -1,28 +1,16 @@
 package com.kubiakdev.safely.data.model
 
-data class DetailModel(var iconResId: Int, var key: String) : Model {
-    var id: Long? = 0
+data class DetailModel(
+        var iconResId: Int,
+        var key: String,
+        var value: String,
+        var isShown: Boolean
+) : Model {
 
-    var value: String = ""
-    var isShown: Boolean = false
-
-    constructor(
-            iconResId: Int,
-            key: String,
-            value: String,
-            isShown: Boolean
-    ) : this(
-            iconResId,
-            key
-    ) {
-        this.iconResId = iconResId
-        this.key = key
-        this.value = value
-        this.isShown = isShown
-    }
+    var id: Long = 0
 
     constructor(
-            id: Long?,
+            id: Long,
             iconResId: Int,
             key: String,
             value: String,
@@ -39,9 +27,5 @@ data class DetailModel(var iconResId: Int, var key: String) : Model {
         this.value = value
         this.isShown = isShown
     }
-
-    override fun toString(): String =
-            "DetailModel(id=$id, chosenIconResId=$iconResId, key='$key', value='$value', isShown=$isShown)"
-
 
 }
