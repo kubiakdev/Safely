@@ -11,7 +11,7 @@ import com.kubiakdev.safely.util.extension.getSharedViewModel
 import kotlinx.android.synthetic.main.fragment_icon.*
 import javax.inject.Inject
 
-class IconFragment : BaseFragment(), IconView, IconAdapterListener {
+class IconFragment : BaseFragment(), IconAdapterListener {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory

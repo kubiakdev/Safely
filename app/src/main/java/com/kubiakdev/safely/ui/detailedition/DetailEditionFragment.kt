@@ -15,7 +15,7 @@ import com.kubiakdev.safely.util.extension.showKeyboard
 import kotlinx.android.synthetic.main.fragment_detail_edition.*
 import javax.inject.Inject
 
-class DetailEditionFragment : BaseFragment(), DetailEditionView {
+class DetailEditionFragment : BaseFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory

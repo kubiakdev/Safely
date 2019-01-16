@@ -26,7 +26,7 @@ import kotlinx.android.synthetic.main.fragment_detail.*
 import java.util.*
 import javax.inject.Inject
 
-class DetailFragment : BaseFragment(), DetailView, DetailAdapterListener {
+class DetailFragment : BaseFragment(), DetailAdapterListener {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory

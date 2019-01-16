@@ -7,12 +7,11 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.google.android.material.snackbar.Snackbar
 import com.kubiakdev.safely.R
-import com.kubiakdev.safely.ui.main.MainView
 import com.kubiakdev.safely.util.extension.hideKeyboard
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_base.*
 
-class BaseActivity : DaggerAppCompatActivity(), MainView {
+class BaseActivity : DaggerAppCompatActivity() {
 
     private val layoutId: Int = R.layout.activity_base
 

@@ -27,7 +27,7 @@ import modelToItem
 import java.util.*
 import javax.inject.Inject
 
-class PasswordFragment : BaseFragment(), PasswordView, PasswordAdapterListener {
+class PasswordFragment : BaseFragment(), PasswordAdapterListener {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
